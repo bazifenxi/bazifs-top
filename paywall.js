@@ -691,27 +691,29 @@
     function generateShareCard(shareUrl) {
         // 设置全局覆盖URL，让generateShareImage()的二维码指向分享链接
         window._shareOverrideUrl = shareUrl;
-        // 立即强制移除所有遮挡弹窗（不等动画延迟）
+
+        // 根本修复：把shareModal从.card深层移到document.body，与paywallModal同层级
+        // 这是解决z-index被压住的根本原因——paywallModal在body上，shareModal在嵌套DOM里
+        const shareModal = document.getElementById('shareModal');
+        if (shareModal) {
+            document.body.appendChild(shareModal);
+            shareModal.style.zIndex = '99999';
+        }
+
+        // 立即强制移除所有遮挡弹窗
         const paywallModal = document.getElementById('paywallModal');
         if (paywallModal) paywallModal.remove();
         const sharePrompt = document.querySelector('.share-prompt');
         if (sharePrompt) sharePrompt.remove();
+
         // 清理状态
         stopSharePoll();
         currentLockedCardId = null;
-        // 直接调用页面自带的命理卡片生成函数
+
+        // 调用页面自带的命理卡片生成函数
         if (typeof generateShareImage === 'function') {
             generateShareImage();
-            // 确保share-modal在最顶层
-            setTimeout(() => {
-                const shareModal = document.getElementById('shareModal');
-                if (shareModal) {
-                    shareModal.style.zIndex = '99999';
-                    shareModal.classList.add('active');
-                }
-            }, 100);
         } else {
-            // 降级：复制链接
             showError('卡片生成不可用，请使用复制链接方式');
         }
     }
