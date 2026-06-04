@@ -1,0 +1,661 @@
+/**
+ * 八字工具付费墙样式
+ * 
+ * 设计风格：中国风 + 现代简洁
+ * 主色调：金色 #ffd700、深蓝 #1a1a2e、青色 #4ecdc4
+ */
+
+/* ==================== 付费遮罩层 ==================== */
+
+.paywall-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(26, 26, 46, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0;
+    animation: paywallFadeIn 0.3s ease forwards;
+    transition: background 0.3s;
+}
+
+.paywall-overlay:hover {
+    background: rgba(26, 26, 46, 0.9);
+}
+
+@keyframes paywallFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(1.02);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.paywall-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+    animation: lockBounce 0.5s ease;
+}
+
+@keyframes lockBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.paywall-text {
+    color: #ffd700;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.paywall-hint {
+    color: #888;
+    font-size: 0.9em;
+}
+
+/* ==================== 支付弹窗 ==================== */
+
+.paywall-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.paywall-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.paywall-modal-content {
+    background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 20px;
+    max-width: 480px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s;
+}
+
+.paywall-modal.active .paywall-modal-content {
+    transform: scale(1) translateY(0);
+}
+
+.paywall-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.paywall-modal-header h2 {
+    color: #ffd700;
+    font-size: 1.3em;
+    margin: 0;
+}
+
+.paywall-modal-close {
+    color: #888;
+    font-size: 1.8em;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.paywall-modal-close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.paywall-modal-body {
+    padding: 25px;
+}
+
+.paywall-modal-desc {
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 0.95em;
+}
+
+/* ==================== 支付选项卡片 ==================== */
+
+.paywall-options {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.paywall-option {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.paywall-option:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.paywall-option:active {
+    transform: translateY(-1px);
+}
+
+/* 分享选项 */
+.paywall-option-share {
+    border-color: rgba(78, 205, 196, 0.3);
+}
+
+.paywall-option-share:hover {
+    background: rgba(78, 205, 196, 0.1);
+    border-color: #4ecdc4;
+}
+
+.paywall-option-share .option-icon {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+}
+
+/* 188元选项 */
+.paywall-option-188 {
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+.paywall-option-188:hover {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: #ffd700;
+}
+
+.paywall-option-188 .option-icon {
+    background: linear-gradient(135deg, #ffd700, #ff9500);
+}
+
+/* 388元选项 */
+.paywall-option-388 {
+    border-color: rgba(147, 51, 234, 0.3);
+}
+
+.paywall-option-388:hover {
+    background: rgba(147, 51, 234, 0.1);
+    border-color: #9333ea;
+}
+
+.paywall-option-388 .option-icon {
+    background: linear-gradient(135deg, #9333ea, #ec4899);
+}
+
+.option-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    margin-bottom: 12px;
+}
+
+.option-title {
+    color: #fff;
+    font-size: 1.15em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.option-desc {
+    color: #888;
+    font-size: 0.85em;
+}
+
+.option-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff6b6b;
+    color: #fff;
+    font-size: 0.7em;
+    padding: 3px 8px;
+    border-radius: 10px;
+}
+
+.option-tag.vip {
+    background: linear-gradient(135deg, #9333ea, #ec4899);
+}
+
+.option-status {
+    margin-top: 10px;
+    font-size: 0.85em;
+    color: #888;
+}
+
+.option-status.unlocked {
+    color: #4ecdc4;
+    font-weight: bold;
+}
+
+/* ==================== 分隔符 ==================== */
+
+.paywall-divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    color: #666;
+    font-size: 0.85em;
+}
+
+.paywall-divider::before,
+.paywall-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.paywall-divider span {
+    padding: 0 15px;
+}
+
+/* ==================== 激活码输入 ==================== */
+
+.paywall-code-section {
+    display: flex;
+    gap: 10px;
+}
+
+.paywall-code-input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 12px 15px;
+    color: #fff;
+    font-size: 1em;
+    transition: all 0.3s;
+}
+
+.paywall-code-input:focus {
+    outline: none;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.paywall-code-input::placeholder {
+    color: #666;
+}
+
+.paywall-code-btn {
+    background: linear-gradient(135deg, #ffd700, #ff9500);
+    color: #1a1a2e;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.paywall-code-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+/* ==================== 错误提示 ==================== */
+
+.paywall-error {
+    color: #ff6b6b;
+    font-size: 0.85em;
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* ==================== 二维码支付 ==================== */
+
+.qrcode-section {
+    text-align: center;
+}
+
+.qrcode-header h3 {
+    color: #ffd700;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.qrcode-header p {
+    color: #888;
+    font-size: 0.9em;
+}
+
+.qrcode-amount {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #fff;
+    margin: 20px 0;
+}
+
+.qrcode-amount::before {
+    content: '¥';
+    font-size: 0.5em;
+    margin-right: 5px;
+}
+
+.qrcode-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 0 auto 20px;
+    max-width: 240px;
+    width: fit-content;
+    box-sizing: border-box;
+}
+
+.qrcode-placeholder {
+    color: #333;
+    text-align: center;
+}
+
+.qrcode-icon {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+.qrcode-hint {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 5px;
+}
+
+.qrcode-tip {
+    color: #888;
+    font-size: 0.85em;
+    margin-bottom: 20px;
+}
+
+.qrcode-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.qrcode-btn-cancel,
+.qrcode-btn-back {
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.qrcode-btn-cancel {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    color: #fff;
+    border: none;
+}
+
+.qrcode-btn-cancel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+}
+
+.qrcode-btn-back {
+    background: transparent;
+    color: #888;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.qrcode-btn-back:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.mock-notice {
+    color: #ffa500;
+    font-size: 0.85em;
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255, 165, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* ==================== Toast提示 ==================== */
+
+.paywall-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 1em;
+    z-index: 20000;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.paywall-toast.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* ==================== 加载中 ==================== */
+
+.paywall-loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(26, 26, 46, 0.95);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 16px;
+    padding: 30px 50px;
+    z-index: 20000;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 215, 0, 0.2);
+    border-top-color: #ffd700;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.paywall-loading p {
+    color: #ffd700;
+    font-size: 0.95em;
+}
+
+/* ==================== 分享提示弹窗 ==================== */
+
+.share-prompt {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.share-prompt.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.share-prompt-content {
+    background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid rgba(78, 205, 196, 0.3);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 350px;
+    width: 90%;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.3s;
+}
+
+.share-prompt.active .share-prompt-content {
+    transform: scale(1);
+}
+
+.share-prompt-icon {
+    font-size: 4em;
+    margin-bottom: 15px;
+}
+
+.share-prompt-content h3 {
+    color: #4ecdc4;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+}
+
+.share-prompt-content p {
+    color: #aaa;
+    font-size: 0.95em;
+    margin-bottom: 8px;
+}
+
+.share-prompt-content strong {
+    color: #ffd700;
+}
+
+.share-prompt-hint {
+    color: #666;
+    font-size: 0.85em;
+    margin-top: 15px;
+}
+
+.share-prompt-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.share-prompt-btn-cancel,
+.share-prompt-btn-confirm {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.share-prompt-btn-cancel {
+    background: transparent;
+    color: #888;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.share-prompt-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.share-prompt-btn-confirm {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    color: #fff;
+    border: none;
+}
+
+.share-prompt-btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+}
+
+/* ==================== 响应式 ==================== */
+
+@media (max-width: 480px) {
+    .paywall-modal-content {
+        width: 95%;
+        border-radius: 16px;
+    }
+    
+    .paywall-modal-header {
+        padding: 15px 20px;
+    }
+    
+    .paywall-modal-body {
+        padding: 20px;
+    }
+    
+    .option-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3em;
+    }
+    
+    .qrcode-actions {
+        flex-direction: column;
+    }
+    
+    .paywall-code-section {
+        flex-direction: column;
+    }
+    
+    .paywall-code-btn {
+        width: 100%;
+    }
+}
+
+/* ==================== 卡片遮罩定位修正 ==================== */
+
+/* 确保card有position定位 */
+.card {
+    position: relative;
+}
+
+/* 遮罩层样式微调 */
+.paywall-overlay .paywall-text {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
