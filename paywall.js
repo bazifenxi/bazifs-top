@@ -528,10 +528,10 @@
                 <p><strong>2个微信群</strong></p>
                 <p class="share-prompt-hint">有2个不同的人点开链接，即可解锁</p>
                 <div style="margin:15px 0;">
-                    <button id="shareCopyBtn" class="share-prompt-btn-confirm" style="width:100%;margin-bottom:8px;font-size:1em;">
+                    <button id="shareCopyBtn" class="share-prompt-btn-confirm" style="width:100%;margin-bottom:8px;font-size:1em;" onclick="window._shareCopy()">
                         📋 复制分享链接
                     </button>
-                    <button id="shareCardBtn" class="share-prompt-btn-confirm" style="width:100%;font-size:1em;background:linear-gradient(135deg,#ffd700,#ff9500);color:#1a1a2e;">
+                    <button id="shareCardBtn" class="share-prompt-btn-confirm" style="width:100%;font-size:1em;background:linear-gradient(135deg,#ffd700,#ff9500);color:#1a1a2e;" onclick="window._shareCard()">
                         🖼️ 生成命理卡片（推荐）
                     </button>
                 </div>
@@ -547,30 +547,14 @@
         document.body.appendChild(prompt);
         setTimeout(() => prompt.classList.add('active'), 10);
 
-        // 绑定复制链接（微信X5同时绑定touchend）
-        const shareCopyBtn = document.getElementById('shareCopyBtn');
-        let shareCopyTriggered = false;
-        function onShareCopy(e) {
-            if (shareCopyTriggered) return;
-            shareCopyTriggered = true;
-            if (e && e.type === 'touchend') e.preventDefault();
-            copyToClipboard('八字分析系统 - 命理解读 | 我能比你更了解你自己！ ' + shareUrl, shareCopyBtn);
-        }
-        shareCopyBtn.addEventListener('click', onShareCopy);
-        shareCopyBtn.addEventListener('touchend', onShareCopy, { passive: false });
-
-        // 绑定生成分享卡片
-        // 微信X5浏览器click事件不可靠，同时绑定touchend
-        const shareCardBtn = document.getElementById('shareCardBtn');
-        let shareCardTriggered = false;
-        function onShareCard(e) {
-            if (shareCardTriggered) return;
-            shareCardTriggered = true;
-            if (e && e.type === 'touchend') e.preventDefault();
+        // 绑定复制链接和生成卡片（用window全局函数，onclick直接调用，兼容微信X5）
+        window._shareCopy = function() {
+            const btn = document.getElementById('shareCopyBtn');
+            copyToClipboard('八字分析系统 - 命理解读 | 我能比你更了解你自己！ ' + shareUrl, btn);
+        };
+        window._shareCard = function() {
             generateShareCard(shareUrl);
-        }
-        shareCardBtn.addEventListener('click', onShareCard);
-        shareCardBtn.addEventListener('touchend', onShareCard, { passive: false });
+        };
 
         // 开始轮询访问状态
         startSharePoll(token);
