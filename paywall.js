@@ -994,6 +994,89 @@
     window.checkShareStatus = checkShareStatus;
     window.checkPaymentStatus = checkPaymentStatus;
 
+    // ==================== 退款申请 ====================
+
+    /**
+     * 显示退款申请弹窗
+     */
+    function showRefundModal() {
+        // 移除已有弹窗
+        const existing = document.getElementById('refundModal');
+        if (existing) existing.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'refundModal';
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:999999;display:flex;align-items:center;justify-content:center;padding:20px;';
+        modal.innerHTML = `
+            <div style="background:#1a1a2e;border-radius:16px;padding:24px;max-width:400px;width:100%;color:#e0e0e0;position:relative;">
+                <span style="position:absolute;top:12px;right:16px;font-size:24px;cursor:pointer;color:#666;" onclick="window._closeRefundModal()">&times;</span>
+                <h3 style="text-align:center;margin:0 0 16px;color:#ffd700;">📋 申请退款</h3>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;font-size:13px;color:#999;margin-bottom:4px;">订单号（选填，支付成功页面有显示）</label>
+                    <input type="text" id="refundOrderId" placeholder="如 BZ1717..." style="width:100%;padding:10px;border-radius:8px;border:1px solid #333;background:#0d0d1a;color:#e0e0e0;font-size:14px;box-sizing:border-box;">
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label style="display:block;font-size:13px;color:#999;margin-bottom:4px;">退款原因 *</label>
+                    <textarea id="refundReason" rows="3" placeholder="请说明退款原因" style="width:100%;padding:10px;border-radius:8px;border:1px solid #333;background:#0d0d1a;color:#e0e0e0;font-size:14px;box-sizing:border-box;resize:vertical;"></textarea>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-size:13px;color:#999;margin-bottom:4px;">联系方式 *（微信号或手机号）</label>
+                    <input type="text" id="refundContact" placeholder="方便联系您处理退款" style="width:100%;padding:10px;border-radius:8px;border:1px solid #333;background:#0d0d1a;color:#e0e0e0;font-size:14px;box-sizing:border-box;">
+                </div>
+                <button onclick="window._submitRefund()" style="width:100%;padding:12px;border:none;border-radius:8px;background:linear-gradient(135deg,#ffd700,#ff9500);color:#1a1a2e;font-size:16px;font-weight:bold;cursor:pointer;">提交退款申请</button>
+                <p style="text-align:center;font-size:11px;color:#666;margin-top:10px;">提交后将在24小时内处理</p>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    /**
+     * 关闭退款弹窗
+     */
+    function closeRefundModal() {
+        const modal = document.getElementById('refundModal');
+        if (modal) modal.remove();
+    }
+
+    /**
+     * 提交退款申请
+     */
+    function submitRefund() {
+        var orderId = document.getElementById('refundOrderId').value.trim();
+        var reason = document.getElementById('refundReason').value.trim();
+        var contact = document.getElementById('refundContact').value.trim();
+
+        if (!reason) { showToast('请填写退款原因'); return; }
+        if (!contact) { showToast('请填写联系方式'); return; }
+
+        var btn = document.querySelector('#refundModal button');
+        if (btn) { btn.disabled = true; btn.textContent = '提交中...'; }
+
+        fetch(API_BASE_URL + '/refund/apply', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_id: orderId, reason: reason, contact: contact })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data.success) {
+                showToast('✅ 退款申请已提交，将在24小时内处理');
+                closeRefundModal();
+            } else {
+                showToast(data.error || '提交失败');
+                if (btn) { btn.disabled = false; btn.textContent = '提交退款申请'; }
+            }
+        })
+        .catch(function() {
+            showToast('网络错误，请重试');
+            if (btn) { btn.disabled = false; btn.textContent = '提交退款申请'; }
+        });
+    }
+
+    window._showRefundModal = showRefundModal;
+    window._closeRefundModal = closeRefundModal;
+    window._submitRefund = submitRefund;
+
     // 将关键函数暴露到模块API
     window.PaywallSystem = {
         init: initPaywall,
