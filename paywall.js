@@ -421,20 +421,19 @@
                             </div>
                         </div>
                         
-                        <!-- 随喜188 -->
+                        <!-- 大众随缘 ¥188 -->
                         <div class="paywall-option paywall-option-188" onclick="handlePayment(188)">
                             <div class="option-icon">💰</div>
-                            <div class="option-title">随喜 ¥188</div>
-                            <div class="option-desc">基础版解锁（永久有效）</div>
-                            <div class="option-tag">推荐</div>
+                            <div class="option-title">大众随缘 ¥188</div>
+                            <div class="option-desc">全部分析解锁（永久有效）</div>
                         </div>
                         
-                        <!-- 随喜388 -->
+                        <!-- 贵人随喜 ¥388 -->
                         <div class="paywall-option paywall-option-388" onclick="handlePayment(388)">
                             <div class="option-icon">💎</div>
-                            <div class="option-title">随喜 ¥388</div>
-                            <div class="option-desc">高级版解锁 + 专属解读（永久有效）</div>
-                            <div class="option-tag vip">VIP</div>
+                            <div class="option-title">贵人随喜 ¥388</div>
+                            <div class="option-desc">全部分析解锁 + 功德加倍（永久有效）</div>
+                            <div class="option-tag vip">贵人</div>
                         </div>
                     </div>
                     
