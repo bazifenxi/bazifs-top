@@ -782,7 +782,7 @@
             <div class="qrcode-section">
                 <div class="qrcode-header">
                     <h3>微信支付</h3>
-                    <p>扫描下方二维码完成支付</p>
+                    <p>截图保存，打开微信扫一扫从相册识别</p>
                 </div>
                 <div class="qrcode-amount">¥${orderInfo.amount || ''}</div>
                 <div class="qrcode-box" id="qrcodeBox">
