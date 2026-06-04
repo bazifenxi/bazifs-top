@@ -547,15 +547,30 @@
         document.body.appendChild(prompt);
         setTimeout(() => prompt.classList.add('active'), 10);
 
-        // 绑定复制链接
-        document.getElementById('shareCopyBtn').addEventListener('click', function() {
-            copyToClipboard('八字分析系统 - 命理解读 | 我能比你更了解你自己！ ' + shareUrl, this);
-        });
+        // 绑定复制链接（微信X5同时绑定touchend）
+        const shareCopyBtn = document.getElementById('shareCopyBtn');
+        let shareCopyTriggered = false;
+        function onShareCopy(e) {
+            if (shareCopyTriggered) return;
+            shareCopyTriggered = true;
+            if (e && e.type === 'touchend') e.preventDefault();
+            copyToClipboard('八字分析系统 - 命理解读 | 我能比你更了解你自己！ ' + shareUrl, shareCopyBtn);
+        }
+        shareCopyBtn.addEventListener('click', onShareCopy);
+        shareCopyBtn.addEventListener('touchend', onShareCopy, { passive: false });
 
         // 绑定生成分享卡片
-        document.getElementById('shareCardBtn').addEventListener('click', function() {
+        // 微信X5浏览器click事件不可靠，同时绑定touchend
+        const shareCardBtn = document.getElementById('shareCardBtn');
+        let shareCardTriggered = false;
+        function onShareCard(e) {
+            if (shareCardTriggered) return;
+            shareCardTriggered = true;
+            if (e && e.type === 'touchend') e.preventDefault();
             generateShareCard(shareUrl);
-        });
+        }
+        shareCardBtn.addEventListener('click', onShareCard);
+        shareCardBtn.addEventListener('touchend', onShareCard, { passive: false });
 
         // 开始轮询访问状态
         startSharePoll(token);
