@@ -395,7 +395,7 @@
                 </div>
                 <div class="paywall-modal-body">
                     <p class="paywall-modal-desc">
-                        选择以下方式解锁全部付费分析内容
+                        随喜即刻为您解锁全文十二大区域内容！
                     </p>
                     
                     <div class="paywall-code-section" style="margin-bottom:20px;">
@@ -424,7 +424,7 @@
                         <!-- 大众随缘 ¥188 -->
                         <div class="paywall-option paywall-option-188" onclick="handlePayment(188)">
                             <div class="option-icon">💰</div>
-                            <div class="option-title">大众随缘 ¥188</div>
+                            <div class="option-title">大众随喜 ¥188</div>
                             <div class="option-desc">全部分析解锁（永久有效）</div>
                         </div>
                         
