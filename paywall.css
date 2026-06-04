@@ -528,6 +528,11 @@
     transition: opacity 0.3s, visibility 0.3s;
 }
 
+/* share-modal 必须在所有弹窗之上 */
+#shareModal {
+    z-index: 99999 !important;
+}
+
 .share-prompt.active {
     opacity: 1;
     visibility: visible;

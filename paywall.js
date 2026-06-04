@@ -691,11 +691,25 @@
     function generateShareCard(shareUrl) {
         // 设置全局覆盖URL，让generateShareImage()的二维码指向分享链接
         window._shareOverrideUrl = shareUrl;
+        // 立即强制移除所有遮挡弹窗（不等动画延迟）
+        const paywallModal = document.getElementById('paywallModal');
+        if (paywallModal) paywallModal.remove();
+        const sharePrompt = document.querySelector('.share-prompt');
+        if (sharePrompt) sharePrompt.remove();
+        // 清理状态
+        stopSharePoll();
+        currentLockedCardId = null;
         // 直接调用页面自带的命理卡片生成函数
         if (typeof generateShareImage === 'function') {
             generateShareImage();
-            // 关闭分享弹窗（命理卡片会弹出自己的预览弹窗）
-            closeSharePrompt();
+            // 确保share-modal在最顶层
+            setTimeout(() => {
+                const shareModal = document.getElementById('shareModal');
+                if (shareModal) {
+                    shareModal.style.zIndex = '99999';
+                    shareModal.classList.add('active');
+                }
+            }, 100);
         } else {
             // 降级：复制链接
             showError('卡片生成不可用，请使用复制链接方式');
