@@ -728,8 +728,14 @@
         createPaymentOrder(amount)
             .then(orderInfo => {
                 hideLoading();
-                if (orderInfo.success && orderInfo.url_qrcode) {
-                    showPaymentQRCode(orderInfo);
+                if (orderInfo.success && (orderInfo.url || orderInfo.url_qrcode)) {
+                    // 手机端直接跳转支付页面，无需扫码
+                    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+                    if (isMobile && orderInfo.url) {
+                        window.location.href = orderInfo.url;
+                    } else {
+                        showPaymentQRCode(orderInfo);
+                    }
                 } else if (orderInfo.error) {
                     showError(orderInfo.error || '创建订单失败');
                 } else {
