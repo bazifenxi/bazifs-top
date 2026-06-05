@@ -197,12 +197,35 @@
             return;
         }
 
+        // 在结果区域顶部插入醒目提示横幅
+        insertUnlockBanner();
+
         PREMIUM_CARDS.forEach(cardId => {
             const card = document.getElementById(cardId);
             if (card) {
                 applyPaywallToCard(card);
             }
         });
+    }
+
+    /**
+     * 在结果区域顶部插入解锁提示横幅
+     */
+    function insertUnlockBanner() {
+        // 避免重复插入
+        if (document.getElementById('unlockBanner')) return;
+
+        var resultSection = document.getElementById('resultSection');
+        if (!resultSection) return;
+
+        var banner = document.createElement('div');
+        banner.id = 'unlockBanner';
+        banner.style.cssText = 'background:linear-gradient(135deg,#ffd700,#ff9500);color:#1a1a2e;text-align:center;padding:12px 16px;border-radius:12px;margin:10px 0;font-size:15px;font-weight:bold;cursor:pointer;box-shadow:0 2px 12px rgba(255,215,0,0.3);';
+        banner.innerHTML = '✨ 随喜即刻为您解锁全文十二大区域内容！ →';
+        banner.onclick = function() {
+            showPaymentModal(PREMIUM_CARDS[0]);
+        };
+        resultSection.insertBefore(banner, resultSection.firstChild);
     }
 
     /**
@@ -255,6 +278,10 @@
         overlays.forEach(overlay => {
             overlay.remove();
         });
+        
+        // 移除解锁提示横幅
+        const banner = document.getElementById('unlockBanner');
+        if (banner) banner.remove();
         
         // 恢复付费卡片的内容
         PREMIUM_CARDS.forEach(cardId => {
