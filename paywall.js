@@ -379,6 +379,14 @@
                     }
                 });
                 applyPaywallsToPremiumCards();
+                
+                // 所有内容渲染完成后，强制滚到结果顶部
+                var resultSection = document.getElementById('resultSection');
+                if (resultSection) {
+                    setTimeout(function() {
+                        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 300);
+                }
             }, 500);
         };
 
