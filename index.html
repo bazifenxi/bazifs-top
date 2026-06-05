@@ -5083,7 +5083,8 @@
         
         // 流年（由displayDayun中的selectDayun自动触发，流月也会随之显示）
         
-        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // 滚动到结果区域顶部（由paywall.js延迟执行，确保最终位置正确）
+        // document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     
     function formatCanggan(zhi) {
@@ -10337,6 +10338,6 @@ function displayCareer(bazi, wuxingScore, xiYong, geju) {
     </footer>
 
     <!-- 付费墙脚本 -->
-    <script src="paywall.js?v=20260605b"></script>
+    <script src="paywall.js?v=20260605c"></script>
 </body>
 </html>
