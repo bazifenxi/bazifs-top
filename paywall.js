@@ -349,6 +349,30 @@
         }
     }
 
+    // ==================== 滚动控制 ====================
+    
+    // 临时屏蔽scrollIntoView，防止生成报告后被其他代码拉到底部
+    let scrollSuppressed = false;
+    let originalScrollIntoView = null;
+    
+    function suppressScrollIntoView() {
+        if (scrollSuppressed) return;
+        scrollSuppressed = true;
+        originalScrollIntoView = Element.prototype.scrollIntoView;
+        Element.prototype.scrollIntoView = function() {
+            // 屏蔽所有scrollIntoView调用
+        };
+    }
+    
+    function restoreScrollIntoView() {
+        if (!scrollSuppressed) return;
+        scrollSuppressed = false;
+        if (originalScrollIntoView) {
+            Element.prototype.scrollIntoView = originalScrollIntoView;
+            originalScrollIntoView = null;
+        }
+    }
+
     /**
      * 设置分析完成监听器
      * 分析完成后应用付费墙遮罩
@@ -363,6 +387,9 @@
             resetShareActivation();
             // 移除现有遮罩和内容缓存
             removeAllPaywalls();
+            
+            // 立即屏蔽所有scrollIntoView，防止被拉到底部
+            suppressScrollIntoView();
             
             // 先调用原始函数
             if (originalDisplayResults) {
@@ -380,15 +407,19 @@
                 });
                 applyPaywallsToPremiumCards();
                 
-                // 所有内容渲染完成后，强制滚到结果顶部
-                var resultSection = document.getElementById('resultSection');
-                if (resultSection) {
-                    var targetY = resultSection.getBoundingClientRect().top + window.pageYOffset - 10;
-                    setTimeout(function() {
-                        window.scrollTo({ top: targetY, behavior: 'smooth' });
-                    }, 800);
-                }
+                // 强制滚到结果区域顶部
+                forceScrollToTop();
             }, 500);
+            
+            // 二次保障：1.5秒后再滚一次，防止延迟渲染导致位移
+            setTimeout(function() {
+                forceScrollToTop();
+            }, 1500);
+            
+            // 3秒后恢复scrollIntoView，正常交互不受影响
+            setTimeout(function() {
+                restoreScrollIntoView();
+            }, 3000);
         };
 
         // 也监听 handleAnalyze
@@ -404,6 +435,18 @@
                 // 调用原始函数
                 originalHandleAnalyze.apply(this, arguments);
             };
+        }
+    }
+    
+    /**
+     * 强制滚动到结果区域顶部
+     */
+    function forceScrollToTop() {
+        var resultSection = document.getElementById('resultSection');
+        if (resultSection) {
+            var targetY = resultSection.getBoundingClientRect().top + window.pageYOffset - 10;
+            if (targetY < 0) targetY = 0;
+            window.scrollTo(0, targetY);
         }
     }
 
@@ -768,6 +811,8 @@
                     // 手机端直接跳转支付页面，无需扫码
                     const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
                     if (isMobile && orderInfo.url) {
+                        // 记录当前页面，支付后可返回
+                        try { sessionStorage.setItem('bazi_payment_order', JSON.stringify(orderInfo)); } catch(e) {}
                         window.location.href = orderInfo.url;
                     } else {
                         showPaymentQRCode(orderInfo);
