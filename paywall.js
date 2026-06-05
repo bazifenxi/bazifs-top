@@ -417,7 +417,7 @@
         modal.innerHTML = `
             <div class="paywall-modal-content">
                 <div class="paywall-modal-header">
-                    <h2>解锁付费内容</h2>
+                    <h2 style="background:linear-gradient(135deg,#4a1a8a,#6b21a8);color:#ffd700;padding:8px 16px;border-radius:8px;display:inline-block;">解锁付费内容</h2>
                     <span class="paywall-modal-close" onclick="closePaywallModal()">&times;</span>
                 </div>
                 <div class="paywall-modal-body">
