@@ -421,8 +421,8 @@
                     <span class="paywall-modal-close" onclick="closePaywallModal()">&times;</span>
                 </div>
                 <div class="paywall-modal-body">
-                    <p class="paywall-modal-desc">
-                        随喜即刻为您解锁全文十二大区域内容！
+                    <p class="paywall-modal-desc" style="color:#ffd700;font-weight:bold;font-size:16px;">
+                        ✨ 随喜即刻为您解锁全文十二大区域内容！
                     </p>
                     
                     <div class="paywall-code-section" style="margin-bottom:20px;">
