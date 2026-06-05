@@ -62,6 +62,16 @@
      * 初始化付费墙系统
      */
     function initPaywall() {
+        // 检查reset参数，清除激活状态（用于测试/清理）
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('reset') === '1') {
+            localStorage.removeItem(PREMIUM_KEY);
+            localStorage.removeItem(ACTIVATION_METHOD_KEY);
+            localStorage.removeItem(ACTIVATION_CODE_KEY);
+            const cleanUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+        }
+
         // 从localStorage读取激活状态
         loadActivationStatus();
         
