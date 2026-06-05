@@ -220,7 +220,7 @@
 
         var banner = document.createElement('div');
         banner.id = 'unlockBanner';
-        banner.style.cssText = 'background:rgba(255,215,0,0.12);color:#ffd700;text-align:center;padding:14px 16px;border-radius:12px;margin:10px 0;font-size:17px;font-weight:bold;cursor:pointer;border:1px solid rgba(255,215,0,0.4);box-shadow:0 2px 12px rgba(255,215,0,0.15);';
+        banner.style.cssText = 'background:linear-gradient(135deg,#4a1a8a,#6b21a8);color:#ffd700;text-align:center;padding:14px 16px;border-radius:12px;margin:10px 0;font-size:17px;font-weight:bold;cursor:pointer;border:1px solid rgba(255,215,0,0.5);box-shadow:0 2px 12px rgba(107,33,168,0.4);';
         banner.innerHTML = '✨ 随喜即刻为您解锁全文十二大区域内容！ →';
         banner.onclick = function() {
             showPaymentModal(PREMIUM_CARDS[0]);
