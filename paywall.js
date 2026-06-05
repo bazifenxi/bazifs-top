@@ -984,11 +984,8 @@
     function checkTestCode(code) {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const testCodes = {
-                    'TEST188': { valid: true, type: '188', message: '测试激活码有效' },
-                    'TEST388': { valid: true, type: '388', message: '测试激活码有效' },
-                    'TESTVIP': { valid: true, type: '388', message: 'VIP测试激活码有效' }
-                };
+                // 生产环境已禁用测试码，所有激活码必须经后端验证
+                const testCodes = {};
                 
                 const result = testCodes[code];
                 if (result) {
