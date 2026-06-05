@@ -383,9 +383,10 @@
                 // 所有内容渲染完成后，强制滚到结果顶部
                 var resultSection = document.getElementById('resultSection');
                 if (resultSection) {
+                    var targetY = resultSection.getBoundingClientRect().top + window.pageYOffset - 10;
                     setTimeout(function() {
-                        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 300);
+                        window.scrollTo({ top: targetY, behavior: 'smooth' });
+                    }, 800);
                 }
             }, 500);
         };
