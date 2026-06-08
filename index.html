@@ -1905,8 +1905,14 @@
         // 时辰默认显示当前北京时间对应的时辰
         const timeSelect = document.getElementById('birthHour');
         if (timeSelect) {
-            // 时辰计算：23点单独处理（子时早子时），其他根据小时计算
-            const shichenValue = currentHour === 23 ? 23 : Math.floor((currentHour + 1) / 2) * 2 - 1;
+            // 时辰计算：23点单独处理（子时早子时），0点用晚子时(0)，其他根据小时计算
+            let shichenValue;
+            if (currentHour === 23) shichenValue = 23;
+            else if (currentHour === 0) shichenValue = 0;
+            else shichenValue = Math.floor((currentHour + 1) / 2) * 2 - 1;
+            // 确保值在option中存在，不存在则默认巳时(9)
+            const opts = Array.from(timeSelect.options).map(o => parseInt(o.value));
+            if (!opts.includes(shichenValue)) shichenValue = 9;
             timeSelect.value = shichenValue;
         }
     }
