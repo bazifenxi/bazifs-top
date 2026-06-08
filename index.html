@@ -3,20 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <script>if(location.search.includes('reset=1')){localStorage.removeItem('bazi_premium_activated');localStorage.removeItem('bazi_activation_method');localStorage.removeItem('bazi_activation_code');history.replaceState({},'',location.pathname);}</script>
     <meta name="description" content="基于传统命理学的八字排盘分析工具，支持四柱排盘、大运流年、五行喜忌、风险预警">
     <meta name="keywords" content="八字,排盘,命理,大运,流年,五行,喜用神">
     <meta name="theme-color" content="#1a1a2e">
-    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta property="og:title" content="八字分析系统 - 命理解读 | 我能比你更了解你自己！">
-    <meta property="og:description" content="八字排盘分析，部分内容免费，四柱大运流年、五行喜忌、风险预警">
-    <meta property="og:url" content="https://bazifs.top">
-    <meta property="og:type" content="website">
-    <title>八字分析系统 - 命理解读 | 我能比你更了解你自己！</title>
+    <title>八字分析系统 V2</title>
     <style>
         * {
             margin: 0;
@@ -1103,7 +1095,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.9);
-            z-index: 99999;
+            z-index: 10000;
             justify-content: center;
             align-items: center;
             flex-direction: column;
@@ -5084,8 +5076,7 @@
         
         // 流年（由displayDayun中的selectDayun自动触发，流月也会随之显示）
         
-        // 滚动到结果区域顶部（由paywall.js延迟执行，确保最终位置正确）
-        // document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
     }
     
     function formatCanggan(zhi) {
@@ -5218,6 +5209,108 @@
                 <div class="analysis-text">月令${wuxingScore.deLing ? '得势' : '失势'}，综合评判为${strength.level}；${xiYong.tiaohou.length > 0 ? '调候用神为' + xiYong.tiaohou.join('、') : '寒暖燥湿基本平衡'}</div>
             </div>
         `;
+    }
+    
+
+    // 动态生成性格优点（结合日干+身强弱+十神+五行强弱）
+    function generateStrengthsText(dayGan, strength, wuxingScore, dominantShishen) {
+        const scores = wuxingScore.scores;
+        const total = Object.values(scores).reduce((a, b) => a + b, 0);
+        const strengths = [];
+        
+        // 日干本性优点
+        const ganGood = {
+            '甲': '正直有担当', '乙': '灵活善变通', '丙': '热情大方', '丁': '心思细腻',
+            '戊': '稳重厚道', '己': '包容能扛事', '庚': '果断有魄力', '辛': '精致有品位',
+            '壬': '胸怀宽广', '癸': '直觉敏锐'
+        };
+        strengths.push(ganGood[dayGan] || '特点鲜明');
+        
+        // 身强弱带来的优点
+        if (strength.level === '过强' || strength.level === '偏旺') {
+            strengths.push('独立自主');
+        } else if (strength.level === '过弱' || strength.level === '偏弱') {
+            strengths.push('善解人意');
+        } else {
+            strengths.push('能刚能柔');
+        }
+        
+        // 十神带来的优点
+        const shishenGood = {
+            '比': '重义气', '劫': '敢冒险', '食': '才华出众', '伤': '有创新精神',
+            '财': '善于经营', '才': '把握机遇', '官': '自律上进', '杀': '抗压能力强',
+            '印': '好学善思', '枭': '悟性极高'
+        };
+        strengths.push(shishenGood[dominantShishen] || '有主见');
+        
+        // 五行偏旺带来的优点
+        const wxEntries = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+        const topWx = wxEntries[0];
+        if (topWx && (topWx[1] / total * 100) > 28) {
+            const wxGood = {
+                '木': '上进心强', '火': '活力十足', '土': '踏实可靠',
+                '金': '执行力强', '水': '聪明灵活'
+            };
+            strengths.push(wxGood[topWx[0]] || '');
+        }
+        
+        return strengths.filter(s => s).join('；');
+    }
+    
+    // 动态生成需要注意（结合日干+身强弱+五行偏缺+十神）
+    function generateWeaknessesText(dayGan, strength, wuxingScore, dominantShishen) {
+        const scores = wuxingScore.scores;
+        const total = Object.values(scores).reduce((a, b) => a + b, 0);
+        const warnings = [];
+        
+        // 日干本性弱点
+        const ganWeak = {
+            '甲': '固执不善变通', '乙': '优柔寡断', '丙': '急躁冲动', '丁': '多愁善感',
+            '戊': '过于保守', '己': '容易犹豫', '庚': '太过强硬', '辛': '过于挑剔',
+            '壬': '过于随性', '癸': '容易多虑'
+        };
+        warnings.push(ganWeak[dayGan] || '注意扬长避短');
+        
+        // 身强弱带来的弱点
+        if (strength.level === '过强') {
+            warnings.push('主观性强不易妥协');
+        } else if (strength.level === '偏旺') {
+            warnings.push('不轻易依赖他人');
+        } else if (strength.level === '过弱') {
+            warnings.push('依赖性较强');
+        } else if (strength.level === '偏弱') {
+            warnings.push('容易受影响');
+        }
+        
+        // 五行偏缺带来的弱点
+        Object.entries(scores).forEach(([wx, score]) => {
+            const ratio = score / total * 100;
+            if (ratio < 10) {
+                const wxWeak = {
+                    '木': '缺乏冲劲', '火': '缺少热情', '土': '根基不稳',
+                    '金': '决断力不足', '水': '不够灵活'
+                };
+                if (wxWeak[wx]) warnings.push(wxWeak[wx]);
+            } else if (ratio > 35) {
+                const wxToo = {
+                    '木': '冲动莽撞', '火': '急躁上火', '土': '固执死板',
+                    '金': '过于刚硬', '水': '想太多'
+                };
+                if (wxToo[wx]) warnings.push(wxToo[wx]);
+            }
+        });
+        
+        // 十神过旺带来的弱点
+        const shishenWeak = {
+            '比': '好竞争不服输', '劫': '好胜心太强', '食': '爱表现', '伤': '口无遮拦',
+            '财': '过于计较', '才': '贪多嚼不烂', '官': '压力感重', '杀': '容易偏激',
+            '印': '依赖性强', '枭': '略显孤僻'
+        };
+        warnings.push(shishenWeak[dominantShishen] || '');
+        
+        // 去重，最多显示3条
+        const unique = [...new Set(warnings.filter(w => w))];
+        return unique.slice(0, 3).join('；');
     }
     
     // ============ 性格分析 ============
@@ -5364,11 +5457,11 @@
             <div style="margin-top: 15px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
                 <div style="background: rgba(0,0,0,0.15); padding: 10px; border-radius: 8px;">
                     <div style="color: #4ecdc4; font-size: 0.85em; margin-bottom: 5px;">性格优点</div>
-                    <div style="color: #aaa; font-size: 0.8em;">${ganInfo.traits.split('，')[0]}；${strengthInfo.trait.split('、')[0]}；${shishenInfo.trait.split('、')[0]}</div>
+                    <div style="color: #aaa; font-size: 0.8em;">${generateStrengthsText(dayGan, strength, wuxingScore, dominantShishen)}</div>
                 </div>
                 <div style="background: rgba(0,0,0,0.15); padding: 10px; border-radius: 8px;">
                     <div style="color: #ff6b6b; font-size: 0.85em; margin-bottom: 5px;">需要注意</div>
-                    <div style="color: #aaa; font-size: 0.8em;">${ganInfo.traits.split('，')[1] || '注意扬长避短'}</div>
+                    <div style="color: #aaa; font-size: 0.8em;">${generateWeaknessesText(dayGan, strength, wuxingScore, dominantShishen)}</div>
                 </div>
             </div>
         `;
@@ -9052,7 +9145,8 @@ function displayFamilyV2(bazi, wuxingScore, xiYong, gender) {
      */
     function generateShareImage() {
         const btn = document.getElementById('shareBtn');
-        if (btn) { btn.textContent = '⏳ 生成中...'; btn.disabled = true; }
+        btn.textContent = '⏳ 生成中...';
+        btn.disabled = true;
         
         // 收集命理信息
         const bazi = _globalBazi;
@@ -9061,7 +9155,8 @@ function displayFamilyV2(bazi, wuxingScore, xiYong, gender) {
         
         if (!bazi || !wuxingScore) {
             showShareToast('❌', '请先完成八字分析');
-            if (btn) { btn.textContent = '🎴 生成命理卡片'; btn.disabled = false; }
+            btn.textContent = '🎴 生成命理卡片';
+            btn.disabled = false;
             return;
         }
         
@@ -9253,18 +9348,34 @@ function displayFamilyV2(bazi, wuxingScore, xiYong, gender) {
             ctx.fillText('你的专属命理分析', width / 2, 480);
         }
         
-        // 使用在线API生成二维码
-        const shareTargetUrl = window._shareOverrideUrl || 'https://bazifs.top';
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(shareTargetUrl)}&color=1a1a2e`;
+        // 使用在线API生成二维码（稳定可靠）
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent('https://bazifs.top')}&color=1a1a2e`;
         
-        // 绘制卡片最终部分并弹窗
-        function finishCard(hasQR) {
+        // 创建二维码图片并等待加载
+        const qrImg = new Image();
+        qrImg.crossOrigin = 'anonymous';
+        qrImg.src = qrUrl;
+        
+        qrImg.onload = function() {
+            try {
+                ctx.drawImage(qrImg, width / 2 - 65, 510, 130, 130);
+            } catch(e) {
+                console.error('二维码绘制失败:', e);
+                // 绘制失败时显示占位符
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(width / 2 - 65, 510, 130, 130);
+                ctx.fillStyle = '#666';
+                ctx.font = '12px "Microsoft YaHei", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('二维码加载失败', width / 2, 580);
+            }
+            
             // 引导语（放在二维码下方，两行）
             ctx.fillStyle = 'rgba(255, 215, 0, 0.7)';
             ctx.font = '12px "Microsoft YaHei", sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('报上你的生日，我能比你更了解你自己！', width / 2, 655);
-            ctx.fillText('截图保存到相册，发给朋友扫码查看😄', width / 2, 675);
+            ctx.fillText('免费看八字，我能比你更了解你自己！', width / 2, 655);
+            ctx.fillText('朋友都说我很准，动动你发财的手指分享一下吧😄', width / 2, 675);
             
             // 底部标语
             ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
@@ -9279,72 +9390,16 @@ function displayFamilyV2(bazi, wuxingScore, xiYong, gender) {
             ctx.stroke();
             
             // 显示预览弹窗
-            try {
-                const dataURL = canvas.toDataURL('image/png');
-                const modalImg = document.getElementById('shareModalImg');
-                if (modalImg) modalImg.src = dataURL;
-                const modal = document.getElementById('shareModal');
-                if (modal) modal.classList.add('active');
-            } catch(e) {
-                console.error('生成卡片预览失败:', e);
-            }
+            const dataURL = canvas.toDataURL('image/png');
+            const modalImg = document.getElementById('shareModalImg');
+            modalImg.src = dataURL;
+            const modal = document.getElementById('shareModal');
+            modal.classList.add('active');
             
             // 更新按钮状态
-            if (btn) { btn.textContent = '✅ 已生成卡片'; btn.classList.add('generated'); }
-        }
-        
-        // 创建二维码图片并等待加载
-        const qrImg = new Image();
-        qrImg.crossOrigin = 'anonymous';
-        qrImg.src = qrUrl;
-        
-        // 二维码加载超时兜底（3秒）
-        const qrTimeout = setTimeout(function() {
-            console.warn('二维码加载超时，使用占位符');
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(width / 2 - 65, 510, 130, 130);
-            ctx.fillStyle = '#1a1a2e';
-            ctx.font = 'bold 16px "Microsoft YaHei", sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('bazifs.top', width / 2, 575);
-            ctx.fillStyle = '#666';
-            ctx.font = '11px "Microsoft YaHei", sans-serif';
-            ctx.fillText('扫码看八字(部分已免费)', width / 2, 595);
-            finishCard(false);
-        }, 3000);
-        
-        qrImg.onload = function() {
-            clearTimeout(qrTimeout);
-            try {
-                ctx.drawImage(qrImg, width / 2 - 65, 510, 130, 130);
-            } catch(e) {
-                console.error('二维码绘制失败:', e);
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(width / 2 - 65, 510, 130, 130);
-                ctx.fillStyle = '#1a1a2e';
-                ctx.font = 'bold 16px "Microsoft YaHei", sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText('bazifs.top', width / 2, 575);
-                ctx.fillStyle = '#666';
-                ctx.font = '11px "Microsoft YaHei", sans-serif';
-                ctx.fillText('扫码看八字(部分已免费)', width / 2, 595);
-            }
-            finishCard(true);
-        };
-        
-        qrImg.onerror = function() {
-            clearTimeout(qrTimeout);
-            console.warn('二维码加载失败，使用占位符');
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(width / 2 - 65, 510, 130, 130);
-            ctx.fillStyle = '#1a1a2e';
-            ctx.font = 'bold 16px "Microsoft YaHei", sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('bazifs.top', width / 2, 575);
-            ctx.fillStyle = '#666';
-            ctx.font = '11px "Microsoft YaHei", sans-serif';
-            ctx.fillText('扫码看八字(部分已免费)', width / 2, 595);
-            finishCard(false);
+            btn.textContent = '✅ 已生成卡片';
+            btn.classList.add('generated');
+            
         };
     }
     
@@ -9355,7 +9410,9 @@ function displayFamilyV2(bazi, wuxingScore, xiYong, gender) {
         const modal = document.getElementById('shareModal');
         modal.classList.remove('active');
         const btn = document.getElementById('shareBtn');
-        if (btn) { btn.textContent = '🎴 生成命理卡片'; btn.classList.remove('generated'); btn.disabled = false; }
+        btn.textContent = '🎴 生成命理卡片';
+        btn.classList.remove('generated');
+        btn.disabled = false;
     }
     
     /**
@@ -10330,15 +10387,7 @@ function displayCareer(bazi, wuxingScore, xiYong, geju) {
 
     </script>
     
-    <!-- 客服联系方式（虎皮椒V3要求） -->
-    <footer style="text-align:center;padding:30px 20px 20px;color:#666;font-size:0.8em;border-top:1px solid rgba(255,255,255,0.05);margin-top:30px;">
-        <p style="margin-bottom:8px;background:linear-gradient(135deg,#4a1a8a,#6b21a8);color:#fff;font-weight:bold;padding:10px 12px;border-radius:8px;">如果您觉得分析不准或是对分析结果不满意，很乐意您与本人联系，定当给您全额退款！</p>
-        <p style="margin-bottom:8px;"><a href="javascript:void(0)" onclick="window._showRefundModal()" style="color:#ffd700;text-decoration:underline;font-size:1em;">📋 申请退款</a></p>
-        <p>客服联系：特传易 17875914494（微信与手机同号）</p>
-        <p style="margin-top:5px;">© 2026 八字分析系统</p>
-    </footer>
-
     <!-- 付费墙脚本 -->
-    <script src="paywall.js?v=20260605f"></script>
+    <script src="paywall.js"></script>
 </body>
 </html>
