@@ -1185,7 +1185,7 @@
     </style>
     
     <!-- 付费墙样式 -->
-    <link rel="stylesheet" href="paywall.css?v=8">
+    <link rel="stylesheet" href="paywall.css?v=9">
 </head>
 <body>
     <div class="container">
@@ -4944,6 +4944,8 @@
     
     function displayResults(bazi) {
         document.getElementById('resultSection').classList.add('active');
+        // 立即跳到结果区顶部，防止渲染过程中先跳底部再拉回
+        document.getElementById('resultSection').scrollIntoView({ behavior: 'instant', block: 'start' });
         
         // 八字显示
         document.getElementById('yearGan').textContent = bazi.year.gan;
@@ -5079,7 +5081,6 @@
         
         // 流年（由displayDayun中的selectDayun自动触发，流月也会随之显示）
         
-        setTimeout(function(){ document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
     }
     
     function formatCanggan(zhi) {
@@ -10422,6 +10423,6 @@ function displayCareer(bazi, wuxingScore, xiYong, geju) {
     </div>
 
     <!-- 付费墙脚本 -->
-    <script src="paywall.js?v=8"></script>
+    <script src="paywall.js?v=9"></script>
 </body>
 </html>
