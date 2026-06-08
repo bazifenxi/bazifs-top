@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="description" content="基于传统命理学的八字排盘分析工具，支持四柱排盘、大运流年、五行喜忌、风险预警">
@@ -9348,28 +9349,19 @@ function displayFamilyV2(bazi, wuxingScore, xiYong, gender) {
             ctx.fillText('你的专属命理分析', width / 2, 480);
         }
         
-        // 使用在线API生成二维码（稳定可靠）
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent('https://bazifs.top')}&color=1a1a2e`;
+        // 使用分享链接或默认URL生成二维码
+        const qrData = window._shareOverrideUrl || 'https://bazifs.top';
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrData)}&color=1a1a2e`;
         
-        // 创建二维码图片并等待加载
+        // 创建二维码图片并等待加载（含超时兜底）
         const qrImg = new Image();
         qrImg.crossOrigin = 'anonymous';
-        qrImg.src = qrUrl;
+        let qrLoaded = false;
         
-        qrImg.onload = function() {
-            try {
-                ctx.drawImage(qrImg, width / 2 - 65, 510, 130, 130);
-            } catch(e) {
-                console.error('二维码绘制失败:', e);
-                // 绘制失败时显示占位符
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(width / 2 - 65, 510, 130, 130);
-                ctx.fillStyle = '#666';
-                ctx.font = '12px "Microsoft YaHei", sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText('二维码加载失败', width / 2, 580);
-            }
-            
+        // 绘制完成后的通用逻辑
+        function finishCard() {
+            if (qrLoaded) return;
+            qrLoaded = true;
             // 引导语（放在二维码下方，两行）
             ctx.fillStyle = 'rgba(255, 215, 0, 0.7)';
             ctx.font = '12px "Microsoft YaHei", sans-serif';
@@ -9392,15 +9384,50 @@ function displayFamilyV2(bazi, wuxingScore, xiYong, gender) {
             // 显示预览弹窗
             const dataURL = canvas.toDataURL('image/png');
             const modalImg = document.getElementById('shareModalImg');
-            modalImg.src = dataURL;
+            if (modalImg) modalImg.src = dataURL;
             const modal = document.getElementById('shareModal');
-            modal.classList.add('active');
+            if (modal) modal.classList.add('active');
             
             // 更新按钮状态
-            btn.textContent = '✅ 已生成卡片';
-            btn.classList.add('generated');
-            
+            if (btn) {
+                btn.textContent = '✅ 已生成卡片';
+                btn.classList.add('generated');
+            }
+        }
+        
+        qrImg.onload = function() {
+            try {
+                ctx.drawImage(qrImg, width / 2 - 65, 510, 130, 130);
+            } catch(e) {
+                console.error('二维码绘制失败:', e);
+                drawQRPlaceholder();
+            }
+            finishCard();
         };
+        
+        qrImg.onerror = function() {
+            console.warn('二维码图片加载失败，使用占位符');
+            drawQRPlaceholder();
+            finishCard();
+        };
+        
+        // 超时兜底：5秒后无论是否加载完成都显示卡片
+        setTimeout(function() {
+            if (!qrLoaded) {
+                drawQRPlaceholder();
+                finishCard();
+            }
+        }, 5000);
+        
+        function drawQRPlaceholder() {
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(width / 2 - 65, 510, 130, 130);
+            ctx.fillStyle = '#666';
+            ctx.font = '12px "Microsoft YaHei", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('扫码查看分析', width / 2, 580);
+        }
+        qrImg.src = qrUrl;
     }
     
     /**
