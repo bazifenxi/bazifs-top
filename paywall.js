@@ -151,11 +151,26 @@
 
     function genCard(url) {
         window._shareOverrideUrl=url;
+        // 先临时恢复plainLanguageCard内容，让shareBtn存在
+        var plc=document.getElementById('plainLanguageCard');
+        var plcContent=plc?plc.querySelector('.card-content'):null;
+        var hadPaywall=(plc && plc.dataset.hasPaywall==='true');
+        var savedHTML='';
+        if (hadPaywall && plcContent && saved.has('plainLanguageCard')) {
+            savedHTML=plcContent.innerHTML;
+            plcContent.innerHTML=saved.get('plainLanguageCard');
+        }
         var sm=document.getElementById('shareModal');if(sm){document.body.appendChild(sm);sm.style.zIndex='99999';}
         var pm=document.getElementById('paywallModal');if(pm)pm.remove();
         var sp=document.querySelector('.share-prompt');if(sp)sp.remove();
         stopPoll();lockedCard=null;
-        if(typeof generateShareImage==='function')generateShareImage();else error('卡片生成不可用，请用复制链接');
+        if(typeof generateShareImage==='function'){
+            generateShareImage();
+            // 生成完恢复付费墙
+            if(hadPaywall && plcContent && savedHTML!==undefined){
+                setTimeout(function(){ plcContent.innerHTML=''; },100);
+            }
+        } else error('卡片生成不可用，请用复制链接');
     }
 
     // 支付
@@ -171,7 +186,7 @@
         var m=document.getElementById('paywallModal'), b=m?m.querySelector('.paywall-modal-body'):null; if(!b)return;
         window.currentPaymentOrder=info;
         var qr=info.url_qrcode||'', oid=info.order_id||info.orderId||'';
-        b.innerHTML='<div class="qrcode-section"><div class="qrcode-header"><h3>微信支付</h3><p>截图保存，打开微信扫一扫从相册识别</p></div><div class="qrcode-amount">¥'+(info.amount||'')+'</div>'+(qr?'<div class="qrcode-box"><img src="'+qr+'" alt="支付二维码" style="width:200px;height:200px;"></div>':'<div class="qrcode-box"><div class="qrcode-placeholder"><div class="qrcode-icon">📱</div><p>支付二维码</p></div></div>')+'<div class="qrcode-tip"><p>💡 支付完成后点击"已完成支付"按钮</p></div><div class="qrcode-actions"><button id="payOkBtn" class="qrcode-btn-cancel">已完成支付 ✓</button><button id="payBackBtn" class="qrcode-btn-back">返回</button></div><p style="font-size:11px;color:#666;margin-top:10px;">订单号: '+oid+'</p></div>';
+        b.innerHTML='<div class="qrcode-section"><div class="qrcode-header"><h3>微信支付</h3><p>截图保存，打开微信扫一扫从相册识别</p></div><div class="qrcode-amount">¥'+(info.amount||'')+'</div>'+(qr?'<div class="qrcode-box"><img src="'+qr+'" alt="支付二维码" style="width:100%;height:auto;max-width:160px;"></div>':'<div class="qrcode-box"><div class="qrcode-placeholder"><div class="qrcode-icon">📱</div><p>支付二维码</p></div></div>')+'<div class="qrcode-tip"><p>💡 支付完成后点击"已完成支付"按钮</p></div><div class="qrcode-actions"><button id="payOkBtn" class="qrcode-btn-cancel">已完成支付 ✓</button><button id="payBackBtn" class="qrcode-btn-back">返回</button></div><p style="font-size:11px;color:#666;margin-top:10px;">订单号: '+oid+'</p></div>';
         tap(document.getElementById('payOkBtn'), checkPay);
         tap(document.getElementById('payBackBtn'), closeModal);
     }
