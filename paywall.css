@@ -9,44 +9,42 @@
 
 .paywall-overlay {
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background: rgba(26, 26, 46, 0.85);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    height: 44px;
+    background: linear-gradient(135deg, #4a1a8a, #6b21a8);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
-    border-radius: 16px;
+    gap: 8px;
+    border-radius: 0 0 16px 16px;
     cursor: pointer;
     z-index: 10;
     opacity: 0;
-    animation: paywallFadeIn 0.3s ease forwards;
+    animation: paywallSlideUp 0.3s ease forwards;
     transition: background 0.3s;
 }
 
 .paywall-overlay:hover {
-    background: rgba(26, 26, 46, 0.9);
+    background: linear-gradient(135deg, #5a2a9a, #7b31b8);
 }
 
-@keyframes paywallFadeIn {
+@keyframes paywallSlideUp {
     from {
         opacity: 0;
-        transform: scale(1.02);
+        transform: translateY(10px);
     }
     to {
         opacity: 1;
-        transform: scale(1);
+        transform: translateY(0);
     }
 }
 
 .paywall-icon {
-    font-size: 3em;
-    margin-bottom: 15px;
-    animation: lockBounce 0.5s ease;
+    font-size: 1em;
+    animation: none;
 }
 
 @keyframes lockBounce {
@@ -56,14 +54,13 @@
 
 .paywall-text {
     color: #ffd700;
-    font-size: 1.3em;
+    font-size: 0.85em;
     font-weight: bold;
-    margin-bottom: 8px;
 }
 
 .paywall-hint {
-    color: #888;
-    font-size: 0.9em;
+    color: rgba(255,215,0,0.7);
+    font-size: 0.75em;
 }
 
 /* ==================== 支付弹窗 ==================== */
@@ -378,11 +375,9 @@
 .qrcode-box {
     background: #fff;
     border-radius: 12px;
-    padding: 15px;
+    padding: 20px;
     margin: 0 auto 20px;
-    max-width: 240px;
-    width: fit-content;
-    box-sizing: border-box;
+    max-width: 200px;
 }
 
 .qrcode-placeholder {
