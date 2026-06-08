@@ -25,6 +25,9 @@
         checkShareVisit();
         observeCards();
         hookDisplay();
+        // 绑定底部退款链接
+        var rl = document.getElementById('refundLink');
+        if (rl) tap(rl, function(){ showRefund(); });
     }
 
     function checkShareVisit() {
