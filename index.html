@@ -1185,7 +1185,7 @@
     </style>
     
     <!-- 付费墙样式 -->
-    <link rel="stylesheet" href="paywall.css?v=7">
+    <link rel="stylesheet" href="paywall.css?v=8">
 </head>
 <body>
     <div class="container">
@@ -5079,7 +5079,7 @@
         
         // 流年（由displayDayun中的selectDayun自动触发，流月也会随之显示）
         
-        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(function(){ document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
     }
     
     function formatCanggan(zhi) {
@@ -6391,7 +6391,7 @@ function displayFamilyV2(bazi, wuxingScore, xiYong, gender) {
         // 滚动到流年区域
         const liunianCard = document.getElementById('liunianCard');
         if (liunianCard) {
-            setTimeout(() => liunianCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+            // 不自动滚动，由displayResults最后统一滚到顶部
         }
     }
     
@@ -6885,7 +6885,7 @@ function displayFamilyV2(bazi, wuxingScore, xiYong, gender) {
         const liuyueCard = document.getElementById('liuyueCard');
         if (liuyueCard) {
             liuyueCard.classList.remove('collapsed');
-            setTimeout(() => liuyueCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+            // 不自动滚动，由displayResults最后统一滚到顶部
         }
     }
     
@@ -7441,9 +7441,8 @@ function displayFamilyV2(bazi, wuxingScore, xiYong, gender) {
                 }
             }
             
-            // 展开时自动滚动到详情位置
+            // 展开时不自动滚动，由displayResults最后统一滚到顶部
             if (willShow) {
-                setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
             }
         }
     }
@@ -10423,6 +10422,6 @@ function displayCareer(bazi, wuxingScore, xiYong, geju) {
     </div>
 
     <!-- 付费墙脚本 -->
-    <script src="paywall.js?v=7"></script>
+    <script src="paywall.js?v=8"></script>
 </body>
 </html>
