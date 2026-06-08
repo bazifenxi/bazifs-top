@@ -143,12 +143,26 @@
      * 对单个卡片应用遮罩
      * @param {HTMLElement} card - 卡片元素
      */
+    // 存储付费卡片原始内容
+    const savedCardContent = new Map();
+
     function applyPaywallToCard(card) {
+        // 已激活则不上锁
+        if (isPremiumActivated) {
+            return;
+        }
         // 避免重复添加
         if (card.dataset.hasPaywall === 'true') {
             return;
         }
         card.dataset.hasPaywall = 'true';
+
+        // 找到card-content元素，保存内容后清空
+        const contentEl = card.querySelector('.card-content');
+        if (contentEl && contentEl.innerHTML.trim()) {
+            savedCardContent.set(card.id, contentEl.innerHTML);
+            contentEl.innerHTML = '';
+        }
 
         // 创建遮罩层
         const overlay = document.createElement('div');
@@ -177,14 +191,23 @@
         overlays.forEach(overlay => {
             overlay.remove();
         });
-        
-        // 重置卡片标记
+
+        // 恢复付费卡片的内容
         PREMIUM_CARDS.forEach(cardId => {
             const card = document.getElementById(cardId);
             if (card) {
                 card.dataset.hasPaywall = 'false';
+                // 恢复保存的内容
+                if (savedCardContent.has(cardId)) {
+                    const contentEl = card.querySelector('.card-content');
+                    if (contentEl) {
+                        contentEl.innerHTML = savedCardContent.get(cardId);
+                    }
+                }
             }
         });
+        // 清空保存的内容
+        savedCardContent.clear();
     }
 
     // ==================== 动态卡片监听 ====================
