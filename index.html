@@ -1185,7 +1185,7 @@
     </style>
     
     <!-- 付费墙样式 -->
-    <link rel="stylesheet" href="paywall.css?v=3">
+    <link rel="stylesheet" href="paywall.css">
 </head>
 <body>
     <div class="container">
@@ -5079,7 +5079,7 @@
         
         // 流年（由displayDayun中的selectDayun自动触发，流月也会随之显示）
         
-        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     
     function formatCanggan(zhi) {
@@ -10417,6 +10417,6 @@ function displayCareer(bazi, wuxingScore, xiYong, geju) {
     </script>
     
     <!-- 付费墙脚本 -->
-    <script src="paywall.js?v=3"></script>
+    <script src="paywall.js"></script>
 </body>
 </html>
