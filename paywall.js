@@ -55,7 +55,38 @@
     function resetShare() { if (aMethod==='share') { isPremium=false; aMethod=''; sessionStorage.removeItem(SHK); shareCount=0; } }
 
     // 遮罩
-    function applyAll() { if (isPremium) return; PREMIUM_CARDS.forEach(function(id) { var c=document.getElementById(id); if (c) applyOne(c); }); }
+    function applyAll() {
+        if (isPremium) return;
+        PREMIUM_CARDS.forEach(function(id) { var c=document.getElementById(id); if (c) applyOne(c); });
+        showBanners();
+    }
+
+    // 顶部+底部醒目横幅
+    function showBanners() {
+        if (isPremium) { removeBanners(); return; }
+        var rs = document.getElementById('resultSection'); if (!rs) return;
+        // 顶部横幅
+        if (!document.getElementById('premiumTopBanner')) {
+            var top = document.createElement('div'); top.id='premiumTopBanner';
+            top.style.cssText='background:linear-gradient(135deg,#4a1a8a,#6b21a8);color:#ffd700;padding:14px 20px;text-align:center;font-size:1.1em;font-weight:bold;cursor:pointer;border-radius:12px;margin:10px 0;display:flex;align-items:center;justify-content:center;gap:8px;';
+            top.innerHTML='✨ 随喜即刻为您解锁全文十二大区域内容！ →';
+            tap(top, function(){ showModal(PREMIUM_CARDS[0]); });
+            rs.insertBefore(top, rs.firstChild);
+        }
+        // 底部横幅
+        if (!document.getElementById('premiumBottomBanner')) {
+            var bot = document.createElement('div'); bot.id='premiumBottomBanner';
+            bot.style.cssText='background:linear-gradient(135deg,#4a1a8a,#6b21a8);color:#ffd700;padding:14px 20px;text-align:center;font-size:1.1em;font-weight:bold;cursor:pointer;border-radius:12px;margin:10px 0;display:flex;align-items:center;justify-content:center;gap:8px;';
+            bot.innerHTML='✨ 随喜即刻为您解锁全文十二大区域内容！ →';
+            tap(bot, function(){ showModal(PREMIUM_CARDS[0]); });
+            rs.appendChild(bot);
+        }
+    }
+
+    function removeBanners() {
+        var t=document.getElementById('premiumTopBanner'); if(t)t.remove();
+        var b=document.getElementById('premiumBottomBanner'); if(b)b.remove();
+    }
 
     function applyOne(card) {
         if (isPremium || card.dataset.hasPaywall==='true') return;
@@ -72,6 +103,7 @@
         document.querySelectorAll('.paywall-overlay').forEach(function(o){o.remove();});
         PREMIUM_CARDS.forEach(function(id) { var c=document.getElementById(id); if (c) { c.dataset.hasPaywall='false'; if (saved.has(id)) { var ct=c.querySelector('.card-content'); if (ct) ct.innerHTML=saved.get(id); } } });
         saved.clear();
+        removeBanners();
     }
 
     function observeCards() {
