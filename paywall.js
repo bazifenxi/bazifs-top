@@ -76,8 +76,8 @@
         // 底部横幅
         if (!document.getElementById('premiumBottomBanner')) {
             var bot = document.createElement('div'); bot.id='premiumBottomBanner';
-            bot.style.cssText='background:linear-gradient(135deg,#4a1a8a,#6b21a8);color:#ffd700;padding:14px 20px;text-align:center;font-size:1.1em;font-weight:bold;cursor:pointer;border-radius:12px;margin:10px 0;display:flex;align-items:center;justify-content:center;gap:8px;';
-            bot.innerHTML='✨ 随喜即刻为您解锁全文十二大区域内容！ →';
+            bot.style.cssText='background:linear-gradient(135deg,#4a1a8a,#6b21a8);color:#ffd700;padding:14px 20px;text-align:center;font-size:1.1em;font-weight:bold;cursor:pointer;border-radius:12px;margin:10px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;';
+            bot.innerHTML='<div>✨ 随喜即刻为您解锁全文十二大区域内容！ →</div><div style="font-size:0.75em;color:#ffd700;opacity:0.85;margin-top:6px;font-weight:normal;">如果您觉得分析不准或是对分析结果不满意，很乐意您与本人联系，定当给您全额退款！</div>';
             tap(bot, function(){ showModal(PREMIUM_CARDS[0]); });
             rs.appendChild(bot);
         }
