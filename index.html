@@ -1182,6 +1182,238 @@
             background: rgba(255,255,255,0.05);
             border-left: 3px solid #888;
         }
+        
+        /* 改进1: 日干醒目标注样式 */
+        .day-wo-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
+            color: #fff;
+            font-size: 0.65em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 6px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(255,71,87,0.3);
+            animation: pulse-tag 2s infinite;
+        }
+        
+        @keyframes pulse-tag {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* 改进3: 人生阶段卡片样式 */
+        .life-stage-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        
+        .life-stage-card h4 {
+            color: #ffd700;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .life-stage-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .life-stage-item {
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            padding: 10px 12px;
+            border-left: 3px solid;
+        }
+        
+        .life-stage-item.year { border-left-color: #74b9ff; }
+        .life-stage-item.month { border-left-color: #ffd700; }
+        .life-stage-item.day { border-left-color: #ff6b6b; }
+        .life-stage-item.hour { border-left-color: #4ecdc4; }
+        
+        .life-stage-title {
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 4px;
+        }
+        
+        .life-stage-item.year .life-stage-title { color: #74b9ff; }
+        .life-stage-item.month .life-stage-title { color: #ffd700; }
+        .life-stage-item.day .life-stage-title { color: #ff6b6b; }
+        .life-stage-item.hour .life-stage-title { color: #4ecdc4; }
+        
+        .life-stage-content {
+            font-size: 0.8em;
+            color: #aaa;
+            line-height: 1.4;
+        }
+        
+        .life-stage-content strong {
+            color: #fff;
+        }
+        
+        /* 改进6: 排盘教学折叠区块样式 */
+        .teaching-card {
+            background: rgba(78,205,196,0.08);
+            border: 1px solid rgba(78,205,196,0.2);
+            border-radius: 12px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        
+        .teaching-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.2);
+            transition: background 0.3s;
+        }
+        
+        .teaching-header:hover {
+            background: rgba(0,0,0,0.3);
+        }
+        
+        .teaching-header h4 {
+            color: #4ecdc4;
+            margin: 0;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .teaching-toggle {
+            color: #888;
+            font-size: 1.2em;
+            transition: transform 0.3s;
+        }
+        
+        .teaching-card.expanded .teaching-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .teaching-content {
+            display: none;
+            padding: 15px;
+        }
+        
+        .teaching-card.expanded .teaching-content {
+            display: block;
+        }
+        
+        .teaching-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+        }
+        
+        .teaching-step:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4ecdc4, #00b894);
+            color: #fff;
+            font-weight: bold;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            color: #fff;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 4px;
+        }
+        
+        .step-desc {
+            color: #aaa;
+            font-size: 0.8em;
+            line-height: 1.5;
+        }
+        
+        /* 十神大白话注释样式 */
+        .shishen-plain {
+            color: #4ecdc4;
+            font-size: 0.75em;
+            margin-top: 4px;
+            padding-top: 4px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .shishen-plain span {
+            color: #ffd700;
+        }
+        
+        /* 神煞通俗化样式 */
+        .shensha-plain {
+            color: #aaa;
+            font-size: 0.8em;
+            margin-top: 3px;
+        }
+        
+        /* 格局职业解读样式 */
+        .geju-career {
+            background: rgba(255,107,107,0.1);
+            border: 1px solid rgba(255,107,107,0.2);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-top: 12px;
+        }
+        
+        .geju-career h5 {
+            color: #ff6b6b;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .geju-career p {
+            color: #ddd;
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+        
+        .geju-career-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        
+        .career-tag {
+            background: rgba(255,215,0,0.15);
+            color: #ffd700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+        }
     </style>
     
     <!-- 付费墙样式 -->
@@ -1376,7 +1608,7 @@
                             <h4>日柱</h4>
                             <div class="tiangan" id="dayGan"></div>
                             <div class="dizhi" id="dayZhi"></div>
-                            <div class="shishen" id="dayShi">日元</div>
+                            <div class="shishen" id="dayShi">日元<span class="day-wo-tag">这就是你</span></div>
                             <div class="canggan" id="dayCang"></div>
                         </div>
                         <div class="bazi-column">
@@ -1394,6 +1626,92 @@
                             <div><span style="color: #888;">纳音：</span><span id="nayinInfo"></span></div>
                             <div><span style="color: #888;">胎元：</span><span id="taiyuanInfo"></span></div>
                             <div><span style="color: #888;">命宫：</span><span id="minggongInfo"></span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 改进3: 四柱对应人生阶段卡片 -->
+                    <div class="life-stage-card">
+                        <h4>📅 四柱对应的人生阶段</h4>
+                        <div class="life-stage-grid">
+                            <div class="life-stage-item year">
+                                <div class="life-stage-title">年柱 · 早年（1-16岁）</div>
+                                <div class="life-stage-content">
+                                    祖上、父母、童年成长环境
+                                    <br><strong id="stageYear"></strong>
+                                </div>
+                            </div>
+                            <div class="life-stage-item month">
+                                <div class="life-stage-title">月柱 · 青年（17-32岁）</div>
+                                <div class="life-stage-content">
+                                    事业、社交、感情萌芽期
+                                    <br><strong id="stageMonth"></strong>
+                                </div>
+                            </div>
+                            <div class="life-stage-item day">
+                                <div class="life-stage-title">日柱 · 中年（33-48岁）</div>
+                                <div class="life-stage-content">
+                                    自我价值、婚姻伴侣、核心能力
+                                    <br><strong id="stageDay"></strong>
+                                </div>
+                            </div>
+                            <div class="life-stage-item hour">
+                                <div class="life-stage-title">时柱 · 晚年（49岁后）</div>
+                                <div class="life-stage-content">
+                                    子女、晚景、最终归宿
+                                    <br><strong id="stageHour"></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 改进6: 排盘过程教学展开区块 -->
+            <div class="teaching-card" id="teachingCard">
+                <div class="teaching-header" onclick="toggleTeaching()">
+                    <h4>📖 我的八字是怎么排出来的？</h4>
+                    <span class="teaching-toggle">▼</span>
+                </div>
+                <div class="teaching-content">
+                    <div class="teaching-step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <div class="step-title">记录出生时间</div>
+                            <div class="step-desc">
+                                把你出生的<span style="color:#ffd700;font-weight:bold;">年、月、日、时</span>准确记录下来。比如你是2000年6月15日早上8点出生。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="teaching-step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <div class="step-title">查万年历转农历</div>
+                            <div class="step-desc">
+                                现代日历大多是公历，但八字用的是传统农历。需要查万年历把公历转成农历日期。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="teaching-step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-title">排出天干地支</div>
+                            <div class="step-desc">
+                                根据万年历查出：<br>
+                                · <span style="color:#74b9ff;">年柱</span> = 年份对应的天干地支<br>
+                                · <span style="color:#ffd700;">月柱</span> = 月份（节气）对应的天干地支<br>
+                                · <span style="color:#ff6b6b;">日柱</span> = 日期对应的天干地支（最关键！）<br>
+                                · <span style="color:#4ecdc4;">时柱</span> = 时辰对应的天干地支
+                            </div>
+                        </div>
+                    </div>
+                    <div class="teaching-step">
+                        <div class="step-num">4</div>
+                        <div class="step-content">
+                            <div class="step-title">四柱八字 완성（完成）</div>
+                            <div class="step-desc">
+                                四柱就是你的<span style="color:#ff6b6b;font-weight:bold;">年柱、月柱、日柱、时柱</span>。<br>
+                                每柱包含一个天干+一个地支，共8个字，所以叫"八字"！
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -4811,6 +5129,11 @@
         document.getElementById(cardId).classList.toggle('collapsed');
     }
     
+    // 改进6: 排盘教学折叠/展开
+    function toggleTeaching() {
+        document.getElementById('teachingCard').classList.toggle('expanded');
+    }
+    
     function toggleManual() {
         const mi = document.getElementById('manualInput');
         mi.style.display = mi.style.display === 'none' ? 'block' : 'none';
@@ -4968,10 +5291,35 @@
         const lunarDate = solarToLunar(year, month, day);
         const lunarDateStr = lunarDate ? formatLunarDate(lunarDate) : '';
         
-        // 十神
-        document.getElementById('yearShi').textContent = getShishen(bazi.day.gan, bazi.year.gan);
-        document.getElementById('monthShi').textContent = getShishen(bazi.day.gan, bazi.month.gan);
-        document.getElementById('hourShi').textContent = getShishen(bazi.day.gan, bazi.hour.gan);
+        // 十神（改进2: 添加大白话注释）
+        const dayGan = bazi.day.gan;
+        const yearShi = getShishen(dayGan, bazi.year.gan);
+        const monthShi = getShishen(dayGan, bazi.month.gan);
+        const hourShi = getShishen(dayGan, bazi.hour.gan);
+        
+        // 十神大白话注释映射
+        const SHISHEN_PLAIN = {
+            '正印': '孕育我、培养我的（父母/学历）',
+            '偏印': '养我但不太亲（继母/非正统技艺）',
+            '七杀': '压制我、考验我的（压力/挑战）',
+            '正官': '管束我的（上司/规矩/名声）',
+            '食神': '我创造的、口福（才华/享受）',
+            '伤官': '我表达的、叛逆（口才/创新/不服管）',
+            '正财': '我正当拥有的、正常工作得来的',
+            '偏财': '意外之财、投机获得',
+            '比肩': '跟我一样的、同事/伙伴',
+            '劫财': '跟我抢的、竞争者'
+        };
+        
+        document.getElementById('yearShi').innerHTML = `${yearShi}<div class="shishen-plain"><span>${yearShi}</span>（${SHISHEN_PLAIN[yearShi] || '十神'}${yearShi === '比' || yearShi === '劫' ? '——祖辈或竞争者' : '——祖辈缘分'}）</div>`;
+        document.getElementById('monthShi').innerHTML = `${monthShi}<div class="shishen-plain"><span>${monthShi}</span>（${SHISHEN_PLAIN[monthShi] || '十神'}——${monthShi === '比' || monthShi === '劫' ? '兄弟姐妹/同事' : '父母/工作环境'}）</div>`;
+        document.getElementById('hourShi').innerHTML = `${hourShi}<div class="shishen-plain"><span>${hourShi}</span>（${SHISHEN_PLAIN[hourShi] || '十神'}——${hourShi === '比' || hourShi === '劫' ? '晚辈/下属' : '子女/下属'}）</div>`;
+        
+        // 改进3: 填充人生阶段内容
+        document.getElementById('stageYear').textContent = `${bazi.year.gan}${bazi.year.zhi} — ${NAYIN[bazi.year.gan + bazi.year.zhi] || ''}`;
+        document.getElementById('stageMonth').textContent = `${bazi.month.gan}${bazi.month.zhi} — ${NAYIN[bazi.month.gan + bazi.month.zhi] || ''}`;
+        document.getElementById('stageDay').textContent = `${bazi.day.gan}${bazi.day.zhi} — ${NAYIN[bazi.day.gan + bazi.day.zhi] || ''}`;
+        document.getElementById('stageHour').textContent = `${bazi.hour.gan}${bazi.hour.zhi} — ${NAYIN[bazi.hour.gan + bazi.hour.zhi] || ''}`;
         
         // 藏干
         document.getElementById('yearCang').textContent = formatCanggan(bazi.year.zhi);
@@ -6237,6 +6585,28 @@ function displayFamilyV2(bazi, wuxingScore, xiYong, gender) {
     function displayShensha(shenshas) {
         const tbody = document.getElementById('shenshaBody');
         
+        // 改进5: 神煞通俗化注释映射
+        const SHENSHA_PLAIN = {
+            '天乙贵人': '遇事有人帮、逢凶化吉',
+            '文昌': '学业好、考试顺利',
+            '驿马': '奔波走动多、职业变动',
+            '桃花': '异性缘好、感情丰富',
+            '华盖': '孤独但有才华、独处能力强',
+            '将星': '有领导力、能担大任',
+            '禄神': '财源好、有俸禄',
+            '羊刃': '性格刚烈、容易冲动、也主血光',
+            '太极贵人': '聪明好学、喜欢钻研',
+            '金舆': '有车有房运、衣食无忧',
+            '天德贵人': '大吉神，福报深厚',
+            '月德贵人': '温和吉利、化险为夷',
+            '劫煞': '容易破财、防是非灾害',
+            '亡神': '心神不安、易有官非',
+            '灾煞': '易有意外、需小心谨慎',
+            '红鸾': '婚恋喜庆、人缘好',
+            '天喜': '好事连连、喜事临门',
+            '寡宿': '感情孤独、婚恋较晚'
+        };
+        
         if (shenshas.length === 0) {
             tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#888;">未发现明显神煞</td></tr>';
             return;
@@ -6244,9 +6614,9 @@ function displayFamilyV2(bazi, wuxingScore, xiYong, gender) {
         
         tbody.innerHTML = shenshas.map(s => `
             <tr>
-                <td><strong style="color:#ffd700">${s.name}</strong></td>
+                <td><strong style="color:#ffd700">${s.name}</strong><div class="shensha-plain">💬 ${SHENSHA_PLAIN[s.name] || '神煞作用'}</div></td>
                 <td>${s.position}</td>
-                <td><span class="shensha-type ${s.type}">${s.type === 'ri' ? '日干' : '年支'}</span></td>
+                <td><span class="shensha-type ${s.type}">${s.type === 'ri' ? '日干' : s.type === 'nian' ? '年支' : '月支'}</span></td>
                 <td style="color:#aaa">${s.desc}</td>
             </tr>
         `).join('');
@@ -10195,6 +10565,30 @@ function displayGeju(bazi, wuxingScore, xiYong, strength) {
     const color = levelColors[geju.level] || '#888';
     const bg = levelBgs[geju.level] || 'rgba(0,0,0,0.2)';
     
+    // 改进4: 格局职业方向大白话解读
+    const GEJU_CAREER_PLAIN = {
+        '食神制杀格': { desc: '适合医疗、技术、公检法等需要专业技能和果断力的工作', tags: ['医疗','技术','公检法','军队','法律'] },
+        '伤官配印格': { desc: '适合创新、教育、文化传播等需要独特思维的工作', tags: ['教育','自媒体','设计','律师','创业'] },
+        '官印相生格': { desc: '适合体制内、管理、政府机关等稳定发展的工作', tags: ['公务员','管理','行政','国企','事业单位'] },
+        '正官正印格': { desc: '适合体制内、管理岗位，仕途发展顺利', tags: ['管理层','政府','国企','教育','科研'] },
+        '食神生财格': { desc: '适合手艺、创意、餐饮等靠才华吃饭的工作', tags: ['餐饮','美食','手工艺','设计','培训'] },
+        '食伤生财格': { desc: '适合创意产业、技术创业、销售等变现能力强的工作', tags: ['IT','销售','创业','咨询','新媒体'] },
+        '财官双美格': { desc: '适合商业管理、投资理财，能富贵双全', tags: ['金融','投资','企业高管','贸易','房地产'] },
+        '杀印相生格': { desc: '适合独当一面、权力岗位，能掌实权', tags: ['管理','军警','医生','法律','创业'] },
+        '正财格': { desc: '适合稳健积累型工作，踏实能攒钱', tags: ['财务','会计','传统行业','服务业','物流'] },
+        '偏财格': { desc: '适合投资理财、销售中介，能抓住机会赚钱', tags: ['金融','销售','房地产','贸易','投资'] },
+        '印绶格': { desc: '适合学术研究、教育传承，靠知识吃饭', tags: ['教育','科研','出版','医疗','文化'] },
+        '从杀格': { desc: '适合依附大平台发展，顺势而为更易成功', tags: ['国企','大企业','体制内','合伙','依附'] },
+        '从印格': { desc: '适合学术专精，深耕某一领域成为专家', tags: ['学术','技术专家','研究','医疗','专业服务'] },
+        '从财格': { desc: '适合商业运作，善于理财和资本运作', tags: ['金融','投资','商业','贸易','企业管理'] },
+        '伤官生财格': { desc: '适合创新创业，能打破常规获得财富', tags: ['创业','IT','新媒体','设计','自由职业'] },
+        '建禄格': { desc: '需食伤泄秀或官杀制之，适合有挑战性的工作', tags: ['销售','竞争性行业','技术','管理','挑战'] },
+        '普通格局': { desc: '格局平常但努力会有收获，适合稳扎稳打的工作', tags: ['服务业','销售','行政','技术','创业'] }
+    };
+    
+    const careerInfo = GEJU_CAREER_PLAIN[geju.name] || { desc: '建议结合十神和喜用神综合判断职业方向', tags: ['综合分析'] };
+    const careerTagsHtml = careerInfo.tags.map(t => `<span class="career-tag">${t}</span>`).join('');
+    
     container.innerHTML = `
         <div style="background:${bg};padding:16px;border-radius:10px;border:1px solid ${color}30;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
@@ -10205,6 +10599,15 @@ function displayGeju(bazi, wuxingScore, xiYong, strength) {
             <div style="color:#999;font-size:0.82em;margin-bottom:8px;">📊 ${geju.qualityDesc}</div>
             <div style="background:rgba(0,0,0,0.15);padding:8px 12px;border-radius:6px;font-size:0.82em;color:#ffd700;">
                 💡 行运建议：${geju.advice}
+            </div>
+        </div>
+        
+        <!-- 改进4: 格局职业方向解读 -->
+        <div class="geju-career">
+            <h5>💼 这类人适合什么方向？</h5>
+            <p>${careerInfo.desc}</p>
+            <div class="geju-career-tags">
+                ${careerTagsHtml}
             </div>
         </div>
     `;
