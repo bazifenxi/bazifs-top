@@ -5,7 +5,7 @@
 (function() {
     'use strict';
 
-    var PREMIUM_CARDS = ['familyCard','healthCard','ganzhiRelationsCard','shenshaCard','yunweiCard','dayunCard','liunianCard','liuyueCard','plainLanguageCard','combinationCard','gejuCard','careerCard'];
+    var PREMIUM_CARDS = ['familyCard','healthCard','ganzhiRelationsCard','shenshaCard','yunweiCard','dayunCard','liunianCard','liuyueCard','plainLanguageCard','combinationCard','tiaohouCard','gejuCard','zuogongCard','careerCard'];
     var API = 'https://bazi.zhongyi-note.top/bazi-api/pay';
     var SK = 'bazi_premium_activated', AK = 'bazi_activation_method', CK = 'bazi_activation_code', SHK = 'bazi_share_count';
     var isPremium = false, aMethod = '', shareCount = 0, aCode = '', lockedCard = null, shareToken = '', pollTimer = null, observer = null;

@@ -1748,9 +1748,35 @@
                 </div>
                 <div class="card-content">
                     <div class="xiyongshen" id="xiyongGrid"></div>
-                    <div class="tiaohou-panel" id="tiaohouPanel"></div>
                     <div class="mingju-analysis" id="xiyongAnalysis"></div>
                 </div>
+            </div>
+            
+            <!-- 调候分析（第一步：寒暖燥湿） -->
+            <div class="card" id="tiaohouCard">
+                <div class="card-header" onclick="toggleCard('tiaohouCard')">
+                    <h3>🌡️ 调候分析</h3>
+                    <span class="card-toggle">▼</span>
+                </div>
+                <div class="card-content" id="tiaohouContent"></div>
+            </div>
+            
+            <!-- 格局定性（第三步：人生层次） -->
+            <div class="card" id="gejuCard">
+                <div class="card-header" onclick="toggleCard('gejuCard')">
+                    <h3>📋 格局定性</h3>
+                    <span class="card-toggle">▼</span>
+                </div>
+                <div class="card-content" id="gejuContent"></div>
+            </div>
+            
+            <!-- 做工分析（第四步：命局运作） -->
+            <div class="card" id="zuogongCard">
+                <div class="card-header" onclick="toggleCard('zuogongCard')">
+                    <h3>⚙️ 做工与制化</h3>
+                    <span class="card-toggle">▼</span>
+                </div>
+                <div class="card-content" id="zuogongContent"></div>
             </div>
             
             <!-- 性格分析 -->
@@ -5399,6 +5425,20 @@
         const xiYong = analyzeXiyongshen(wuxingScore, strength, bazi);
         displayXiyongshen(xiYong, strength, wuxingScore);
         
+        // ===== 四维度分析次第：调候→旺衰(已在五行中)→格局→做工 =====
+        
+        // 第一步：调候分析（独立卡片）
+        displayTiaohou(xiYong, strength, bazi);
+        
+        // 第三步：格局定性（前移，紧跟调候和喜用神）
+        const geju = analyzeGeju(bazi, wuxingScore, xiYong, strength);
+        displayGeju(bazi, wuxingScore, xiYong, strength);
+        
+        // 第四步：做工与制化（独立卡片）
+        displayZuogong(bazi, wuxingScore, xiYong, strength, geju);
+        
+        // ===== 以下为辅助分析 =====
+        
         // 性格分析
         displayPersonality(bazi, wuxingScore, strength);
         
@@ -5407,10 +5447,6 @@
         
         // 命局组合断语
         displayCombinations(bazi, wuxingScore, xiYong);
-        
-        // 格局定性
-        const geju = analyzeGeju(bazi, wuxingScore, xiYong, strength);
-        displayGeju(bazi, wuxingScore, xiYong, strength);
         
         // 职业倾向
         displayCareer(bazi, wuxingScore, xiYong, geju);
@@ -5543,18 +5579,7 @@
             </div>
         `;
         
-        document.getElementById('tiaohouPanel').innerHTML = `
-            <div class="tiaohou-card">
-                <h4>寒暖燥湿</h4>
-                <p>${xiYong.tiaohou.includes('丙') || xiYong.tiaohou.includes('丁') ? '八字偏寒（水旺），需火暖局，丙丁为调候用神' : 
-                    xiYong.tiaohou.includes('壬') || xiYong.tiaohou.includes('癸') ? '八字偏燥（火旺），需水润局，壬癸为调候用神' : 
-                    '寒暖基本平衡，以格局用神为主'}</p>
-            </div>
-            <div class="tiaohou-card">
-                <h4>旺衰判断</h4>
-                <p>日主${strength.level}，${xiYong.tiaohou.length > 0 ? '虽有旺衰之分，但调候为先，' + xiYong.tiaohou.join('、') + '为调候所需不可克制' : (strength.level.includes('旺') || strength.level.includes('强') ? '宜克泄耗，忌生扶' : '宜生扶，忌克泄')}</p>
-            </div>
-        `;
+        // 调候内容已独立成卡（tiaohouCard），此处不再重复展示
         
         document.getElementById('xiyongAnalysis').innerHTML = `
             <h4>用神分析</h4>
@@ -5570,6 +5595,105 @@
     }
     
 
+    // ============ 调候独立展示 ============
+    function displayTiaohou(xiYong, strength, bazi) {
+        const container = document.getElementById('tiaohouContent');
+        if (!container) return;
+        
+        const needsFire = xiYong.tiaohou.includes('丙') || xiYong.tiaohou.includes('丁');
+        const needsWater = xiYong.tiaohou.includes('壬') || xiYong.tiaohou.includes('癸');
+        const hasTiaohou = xiYong.tiaohou.length > 0;
+        
+        let climateDesc, climateIcon, climateColor;
+        if (needsFire) {
+            climateDesc = '八字偏寒（水旺月份出生），寒气重，最需要火来暖局';
+            climateIcon = '❄️';
+            climateColor = '#74b9ff';
+        } else if (needsWater) {
+            climateDesc = '八字偏燥（火旺月份出生），燥气重，最需要水来润局';
+            climateIcon = '🔥';
+            climateColor = '#e17055';
+        } else {
+            climateDesc = '寒暖基本平衡，气候调和，以格局和旺衰用神为主';
+            climateIcon = '☯️';
+            climateColor = '#4ecdc4';
+        }
+        
+        // 检查命局中调候用神是否出现
+        const allGan = [bazi.year.gan, bazi.month.gan, bazi.day.gan, bazi.hour.gan];
+        const tiaohouPresent = hasTiaohou ? xiYong.tiaohou.filter(t => allGan.includes(t)) : [];
+        const tiaohouMissing = hasTiaohou ? xiYong.tiaohou.filter(t => !allGan.includes(t)) : [];
+        
+        // 检查地支藏干中是否有调候
+        const allZhi = [bazi.year.zhi, bazi.month.zhi, bazi.day.zhi, bazi.hour.zhi];
+        let tiaohouInZhi = [];
+        allZhi.forEach(zhi => {
+            const cang = CANGGAN[zhi];
+            if (cang) {
+                Object.keys(cang).forEach(gan => {
+                    if (xiYong.tiaohou.includes(gan) && !tiaohouInZhi.includes(gan)) {
+                        tiaohouInZhi.push(gan);
+                    }
+                });
+            }
+        });
+        
+        let statusText, statusColor;
+        if (!hasTiaohou) {
+            statusText = '气候调和';
+            statusColor = '#4ecdc4';
+        } else if (tiaohouPresent.length > 0) {
+            statusText = '命局自带调候，底子好';
+            statusColor = '#4ecdc4';
+        } else if (tiaohouInZhi.length > 0) {
+            statusText = '地支藏干有调候之根，暗中有救';
+            statusColor = '#ffd700';
+        } else {
+            statusText = '命局缺调候用神，需要大运流年来补';
+            statusColor = '#e17055';
+        }
+        
+        let html = '';
+        
+        // 气候底色
+        html += `
+            <div style="background:rgba(0,0,0,0.15);padding:14px;border-radius:10px;margin-bottom:12px;">
+                <div style="font-size:1.1em;font-weight:bold;color:${climateColor};margin-bottom:8px;">${climateIcon} 气候底色</div>
+                <div style="color:#ddd;font-size:0.9em;line-height:1.6;">${climateDesc}</div>
+            </div>
+        `;
+        
+        // 调候用神
+        if (hasTiaohou) {
+            html += `
+                <div style="padding:14px;border-radius:10px;margin-bottom:12px;border:1px solid ${statusColor}30;background:${statusColor}08;">
+                    <div style="font-size:0.95em;font-weight:bold;color:${statusColor};margin-bottom:8px;">🔍 调候状态：${statusText}</div>
+                    <div style="color:#ddd;font-size:0.88em;margin-bottom:6px;">
+                        调候用神：<span style="color:#ffd700;font-weight:bold;">${xiYong.tiaohou.join('、')}</span>
+                    </div>
+            `;
+            if (tiaohouPresent.length > 0) {
+                html += `<div style="color:#4ecdc4;font-size:0.85em;">✅ 天干已有：${tiaohouPresent.join('、')}（自带调候，先天条件好）</div>`;
+            }
+            if (tiaohouInZhi.length > 0) {
+                html += `<div style="color:#ffd700;font-size:0.85em;">📌 地支藏有：${tiaohouInZhi.join('、')}（暗藏调候之根）</div>`;
+            }
+            if (tiaohouMissing.length > 0 && tiaohouPresent.length === 0) {
+                html += `<div style="color:#e17055;font-size:0.85em;">⚠️ 天干不见：${tiaohouMissing.join('、')}（需等大运流年补入）</div>`;
+            }
+            html += `</div>`;
+        }
+        
+        // 调候与旺衰的关系
+        html += `
+            <div style="background:rgba(0,0,0,0.1);padding:12px;border-radius:8px;font-size:0.85em;color:#aaa;line-height:1.6;">
+                💡 <span style="color:#ccc;">调候优先原则</span>：调候是人生的"环境气候"，优先于旺衰。即使身弱需印比帮身，如果调候需要火，火（印星）同时满足调候和生身，一举两得。调候用神不可被克制。
+            </div>
+        `;
+        
+        container.innerHTML = html;
+    }
+    
     // 动态生成性格优点（结合日干+身强弱+十神+五行强弱）
     function generateStrengthsText(dayGan, strength, wuxingScore, dominantShishen) {
         const scores = wuxingScore.scores;
@@ -10289,6 +10413,245 @@ function displayCombinations(bazi, wuxingScore, xiYong) {
     container.innerHTML = html;
 }
     
+// ============ 做工与制化分析（第四步：命局运作方式） ============
+
+/**
+ * 分析并展示命局的做工模式——即命局中的十神如何相互作用、财官如何被制化
+ */
+function displayZuogong(bazi, wuxingScore, xiYong, strength, geju) {
+    const container = document.getElementById('zuogongContent');
+    if (!container) return;
+    
+    const dayGan = bazi.day.gan;
+    const dayWx = WUXING_TIAN[dayGan];
+    
+    // 收集四柱天干十神
+    const pillars = [
+        { label: '年', gan: bazi.year.gan, zhi: bazi.year.zhi },
+        { label: '月', gan: bazi.month.gan, zhi: bazi.month.zhi },
+        { label: '日', gan: bazi.day.gan, zhi: bazi.day.zhi },
+        { label: '时', gan: bazi.hour.gan, zhi: bazi.hour.zhi }
+    ];
+    
+    // 统计十神力量（天干+藏干）
+    const shishenPower = {};
+    const shishenPositions = {}; // 记录每个十神出现在哪些位置
+    pillars.forEach(p => {
+        if (p.label === '日') return; // 日主自己不算十神
+        const shi = getShishen(dayGan, p.gan);
+        if (!shishenPower[shi]) { shishenPower[shi] = 0; shishenPositions[shi] = []; }
+        shishenPower[shi] += 10;
+        shishenPositions[shi].push(p.label + '干');
+        
+        const cang = CANGGAN[p.zhi];
+        if (cang) {
+            Object.entries(cang).forEach(([g, info]) => {
+                const s = getShishen(dayGan, g);
+                if (!shishenPower[s]) { shishenPower[s] = 0; shishenPositions[s] = []; }
+                shishenPower[s] += info.power;
+                shishenPositions[s].push(p.label + '支(' + g + ')');
+            });
+        }
+    });
+    
+    // 判断十神是否有力
+    const hasPower = (shi, threshold) => (shishenPower[shi] || 0) >= (threshold || 5);
+    
+    // 定义做工模式
+    const zuogongPatterns = [];
+    
+    // 1. 食神制杀
+    if (hasPower('食') && hasPower('杀')) {
+        const effective = shishenPower['食'] > shishenPower['枭']; // 无枭夺食则有效
+        zuogongPatterns.push({
+            name: '食神制杀',
+            type: effective ? 'good' : 'warn',
+            icon: '🗡️',
+            desc: effective ? '食神有力制约七杀，将压力转化为动力和权威' : '食神制杀但枭神在侧，制化不够彻底',
+            detail: '食神' + (shishenPositions['食'] || []).join('、') + ' → 制 → 七杀' + (shishenPositions['杀'] || []).join('、'),
+            meaning: '遇到压力能靠专业技能化解，适合公检法、技术管理等需要"以柔克刚"的领域'
+        });
+    }
+    
+    // 2. 杀印相生
+    if (hasPower('杀') && hasPower('印')) {
+        zuogongPatterns.push({
+            name: '杀印相生',
+            type: 'good',
+            icon: '⚡',
+            desc: '七杀的凶性被印星化解，化敌为友、化压力为权力',
+            detail: '七杀' + (shishenPositions['杀'] || []).join('、') + ' → 生 → 印星' + (shishenPositions['印'] || []).join('、'),
+            meaning: '能在高压环境中成长，把挑战变成晋升阶梯，适合独当一面'
+        });
+    }
+    
+    // 3. 官印相生
+    if (hasPower('官') && hasPower('印')) {
+        zuogongPatterns.push({
+            name: '官印相生',
+            type: 'high',
+            icon: '🏛️',
+            desc: '正官生正印，权力与学识互相加持，清正贵格',
+            detail: '正官' + (shishenPositions['官'] || []).join('、') + ' → 生 → 印星' + (shishenPositions['印'] || []).join('、'),
+            meaning: '适合体制内发展，职位和威望同步提升'
+        });
+    }
+    
+    // 4. 食伤生财
+    const shiShangPower = (shishenPower['食'] || 0) + (shishenPower['伤'] || 0);
+    const caiPower = (shishenPower['财'] || 0) + (shishenPower['才'] || 0);
+    if (shiShangPower >= 8 && caiPower >= 8) {
+        zuogongPatterns.push({
+            name: '食伤生财',
+            type: 'good',
+            icon: '🎨',
+            desc: '靠才华、技术、创意赚钱，生财有道',
+            detail: (hasPower('食') ? '食神' : '') + (hasPower('伤') ? '伤官' : '') + ' → 生 → 财星',
+            meaning: '技术变现、创意赚钱，适合自由职业、创业、文化产业'
+        });
+    }
+    
+    // 5. 财生官
+    if (caiPower >= 8 && hasPower('官')) {
+        zuogongPatterns.push({
+            name: '财生官',
+            type: 'good',
+            icon: '💰',
+            desc: '以财养官，经济实力支撑社会地位',
+            detail: '财星 → 生 → 正官' + (shishenPositions['官'] || []).join('、'),
+            meaning: '善于用资源经营人脉和地位，适合商业管理方向'
+        });
+    }
+    
+    // 6. 伤官配印
+    if (hasPower('伤') && hasPower('印')) {
+        zuogongPatterns.push({
+            name: '伤官配印',
+            type: 'good',
+            icon: '📚',
+            desc: '伤官的叛逆被印星约束，才华有了方向',
+            detail: '伤官' + (shishenPositions['伤'] || []).join('、') + ' + 印星' + (shishenPositions['印'] || []).join('、'),
+            meaning: '创新但不失控，适合教育、文化传播、技术创新领域'
+        });
+    }
+    
+    // 7. 负面做工：伤官见官（无制化）
+    if (hasPower('伤') && hasPower('官')) {
+        const hasYin = hasPower('印');
+        const hasCai = caiPower >= 8;
+        if (!hasYin && !hasCai) {
+            zuogongPatterns.push({
+                name: '伤官见官（无制化）',
+                type: 'danger',
+                icon: '⚔️',
+                desc: '伤官直冲正官，叛逆与规则正面对抗',
+                detail: '伤官 → 克 → 正官，无财通关、无印制化',
+                meaning: '容易与领导冲突、口舌是非多，需修心养性'
+            });
+        }
+    }
+    
+    // 8. 负面做工：比劫夺财（无食伤通关）
+    if (hasPower('比', 15) && hasPower('劫', 10) && caiPower >= 8) {
+        if (!hasPower('食') && !hasPower('伤')) {
+            zuogongPatterns.push({
+                name: '比劫夺财（无通关）',
+                type: 'warn',
+                icon: '💸',
+                desc: '比劫强旺直克财星，合伙破财风险高',
+                detail: '比劫强旺 → 克 → 财星，无食伤居中通关',
+                meaning: '不宜合伙，容易被朋友借钱不还或合作亏损'
+            });
+        }
+    }
+    
+    // 9. 负面做工：枭神夺食
+    if (hasPower('枭') && hasPower('食')) {
+        zuogongPatterns.push({
+            name: '枭神夺食',
+            type: 'warn',
+            icon: '🦉',
+            desc: '枭印克制食神，才华被压制、赚钱渠道受阻',
+            detail: '枭神' + (shishenPositions['枭'] || []).join('、') + ' → 克 → 食神' + (shishenPositions['食'] || []).join('、'),
+            meaning: '想法多但落地难，需财星制枭或走食伤旺运方可化解'
+        });
+    }
+    
+    // 如果什么都没检测到
+    if (zuogongPatterns.length === 0) {
+        container.innerHTML = `
+            <div style="padding:20px;text-align:center;color:#888;">
+                <div style="font-size:1.2em;margin-bottom:8px;">☯️</div>
+                <div>命局十神关系较为平和，未检测到明显的做工模式</div>
+                <div style="font-size:0.85em;margin-top:6px;color:#666;">人生运转较为平顺，无大起大落的制化关系</div>
+            </div>
+        `;
+        return;
+    }
+    
+    // 排序：吉的排前面，凶的排后面
+    const typeOrder = { high: 0, good: 1, normal: 2, warn: 3, danger: 4 };
+    zuogongPatterns.sort((a, b) => (typeOrder[a.type] || 2) - (typeOrder[b.type] || 2));
+    
+    const typeStyles = {
+        high: { bg: 'rgba(78,205,196,0.12)', border: '#4ecdc4', badge: '🟢 上佳' },
+        good: { bg: 'rgba(78,205,196,0.08)', border: '#4ecdc4', badge: '🟢 吉' },
+        normal: { bg: 'rgba(255,215,0,0.08)', border: '#ffd700', badge: '🟡 平' },
+        warn: { bg: 'rgba(255,215,0,0.08)', border: '#ffd700', badge: '🟡 警' },
+        danger: { bg: 'rgba(255,107,107,0.1)', border: '#ff6b6b', badge: '🔴 凶' }
+    };
+    
+    let html = '<div style="display:flex;flex-direction:column;gap:12px;">';
+    
+    // 总述
+    const goodCount = zuogongPatterns.filter(p => p.type === 'good' || p.type === 'high').length;
+    const badCount = zuogongPatterns.filter(p => p.type === 'warn' || p.type === 'danger').length;
+    let summaryText = '';
+    if (goodCount > badCount) {
+        summaryText = '命局做工以吉格为主，运转顺畅，得财得官有路';
+    } else if (badCount > goodCount) {
+        summaryText = '命局做工冲突较多，需大运流年来化解，走对运则反转';
+    } else {
+        summaryText = '命局做工吉凶参半，关键看大运走什么方向';
+    }
+    
+    html += `
+        <div style="background:rgba(0,0,0,0.15);padding:12px;border-radius:10px;margin-bottom:4px;">
+            <div style="font-size:0.9em;color:#ccc;line-height:1.5;">
+                📊 <b>做工总述</b>：检测到 ${zuogongPatterns.length} 组做工关系。${summaryText}
+            </div>
+        </div>
+    `;
+    
+    zuogongPatterns.forEach(p => {
+        const s = typeStyles[p.type] || typeStyles.normal;
+        html += `
+            <div style="background:${s.bg};padding:14px;border-radius:10px;border-left:3px solid ${s.border};">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <span style="font-size:1.05em;font-weight:bold;color:#eee;">${p.icon} ${p.name}</span>
+                    <span style="font-size:0.75em;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.1);color:${s.border};">${s.badge}</span>
+                </div>
+                <div style="color:#ddd;font-size:0.88em;margin-bottom:6px;">${p.desc}</div>
+                <div style="color:#999;font-size:0.8em;font-family:monospace;margin-bottom:6px;">${p.detail}</div>
+                <div style="color:#ffd700;font-size:0.82em;">💡 现实意义：${p.meaning}</div>
+            </div>
+        `;
+    });
+    
+    // 底部说明
+    html += `
+        <div style="padding:10px;background:rgba(0,0,0,0.15);border-radius:8px;margin-top:4px;">
+            <p style="color:#888;font-size:0.72em;line-height:1.5;">
+                💡 做工看的是命局中十神之间如何"做事"：谁制谁、谁生谁、谁化解谁。
+                有制化则凶中有救，无制化则冲突激烈。具体应期需结合大运流年引动。
+            </p>
+        </div>
+    `;
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
 // ============ 格局定性 V2（正格+偏格+从格） ============
 
 /**
@@ -10537,27 +10900,13 @@ function analyzeGeju(bazi, wuxingScore, xiYong, strength) {
 function displayGeju(bazi, wuxingScore, xiYong, strength) {
     const geju = analyzeGeju(bazi, wuxingScore, xiYong, strength);
     
-    let container = document.getElementById('gejuContent');
-    if (!container) {
-        const combCard = document.getElementById('combinationCard');
-        const insertAfter = combCard ? combCard : document.getElementById('familyCard');
-        if (insertAfter) {
-            const newCard = document.createElement('div');
-            newCard.className = 'card';
-            newCard.id = 'gejuCard';
-            newCard.innerHTML = `
-                <div class="card-header" onclick="toggleCard('gejuCard')">
-                    <span>${geju.icon} 命局格局</span>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="card-content" id="gejuContent"></div>
-            `;
-            insertAfter.parentNode.insertBefore(newCard, insertAfter.nextSibling);
-        }
-        container = document.getElementById('gejuContent');
-    }
-    
+    // 格局卡已改为静态HTML，直接获取content容器
+    const container = document.getElementById('gejuContent');
     if (!container) return;
+    
+    // 更新卡片标题图标
+    const headerSpan = container.closest('.card')?.querySelector('.card-header span:first-child');
+    if (headerSpan) headerSpan.textContent = `${geju.icon} 格局定性 · ${geju.name}`;
     
     const levelColors = { high:'#4ecdc4', good:'#81ecec', normal:'#ffd700', warn:'#e17055', danger:'#ff6b6b', special:'#a29bfe' };
     const levelBgs = { high:'rgba(78,205,196,0.1)', good:'rgba(129,236,236,0.08)', normal:'rgba(255,215,0,0.08)', warn:'rgba(225,112,85,0.08)', danger:'rgba(255,107,107,0.08)', special:'rgba(162,155,254,0.1)' };
@@ -10752,9 +11101,9 @@ function displayCareer(bazi, wuxingScore, xiYong, geju) {
     
     let container = document.getElementById('careerContent');
     if (!container) {
-        const gejuCard = document.getElementById('gejuCard');
-        const insertAfter = gejuCard ? gejuCard : document.getElementById('combinationCard');
-        const refCard = insertAfter ? insertAfter : document.getElementById('familyCard');
+        // 职业卡片插入到做工卡片之后
+        const insertAfter = document.getElementById('zuogongCard') || document.getElementById('combinationCard') || document.getElementById('familyCard');
+        const refCard = insertAfter;
         if (refCard) {
             const newCard = document.createElement('div');
             newCard.className = 'card';
